@@ -18,9 +18,11 @@ exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n
 set path+=.;/
 
 set laststatus=2                " show status line?  Yes, always!
-set undofile                             " Pour activer la feature
-set undodir=~/.cache/vim/bkp,.           " Pour ranger tous les fichier d'undo
-                                         " au même endroit
+if version >= 730
+    set undofile                             " Pour activer la feature
+    set undodir=~/.cache/vim/bkp,.           " Pour ranger tous les fichier d'undo
+                                             " au même endroit
+endif
 au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
                                          " qui sont dans /tmp
 
