@@ -16,6 +16,9 @@ shopt -s checkwinsize
 # enable color support of ls and also add handy aliases
 
 if [ "$TERM" != "dumb" ]; then
+    TERM=xterm-256color
+fi
+if [ "$TERM" != "dumb" ]; then
     eval "`dircolors -b`"
     # some more ls aliases
     alias ll='ls  --color -lah'
@@ -25,7 +28,6 @@ if [ "$TERM" != "dumb" ]; then
 fi
 alias ssh-add="ssh-add -t 43200 -c"
 alias grep="grep --color"
-alias atos="lftp -u webvision,Web!Vis ftp-rennes.si.fr.atosorigin.com"
 alias opannotate-asm='opannotate -a --objdump-params -S'
 ulimit -c unlimited
 # Environnement
@@ -59,13 +61,13 @@ if [ `uname -s` == "SunOS" ]; then
     export PATH=/usr/local/bin:$PATH
     alias vi="vim"
 fi
-export PATH=$PATH:/home/aurel/bin:/home/aurel/.gem/ruby/1.8/bin
+export PATH=/srv/tools/bin:/home/aurel/local/bin:/home/aurel/bin:/home/aurel/.gem/ruby/1.8/bin:$PATH
+export PYTHONPATH=/srv/tools/lib/python
 export MCMS_HOME=/home/aurel/mcms-aurel
 if [ `uname -s` == "SunOS" ]; then
     LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib:/opt/csw/lib
 fi
 export LD_LIBRARY_PATH
-export MCMS_INJECTORS=" 20201 20202 20203 20204 20205 "
 if [ -d /var/tmp/aurel/ccache ] ; then
     export CCACHE_DIR=/var/tmp/aurel/ccache
     export PATH="/usr/lib/ccache:${PATH}"
@@ -74,6 +76,5 @@ fi
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
-export JAVA_HOME=/usr/lib/jvm/java-6-sun
 
 setterm -blength 0
