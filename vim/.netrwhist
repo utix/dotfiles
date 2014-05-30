@@ -1,11 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/home/aurel/dev/local/mcms/www/flash/googleMap'
-let g:netrw_dirhist_2='/home/aurel/dev/local/mcms/www/flash/googleMap/src'
-let g:netrw_dirhist_3='/home/aurel/dev/master/mcg/prefix/etc/mcg'
-let g:netrw_dirhist_4='/var/www/dav/.DAV'
-let g:netrw_dirhist_5='/home/aurel/dev/local/mcms/www/flash/googleMap'
-let g:netrw_dirhist_6='/home/aurel/dev/local/mcms/www/flash/googleMap/src'
-let g:netrw_dirhist_7='/home/aurel/dev/local/flex/googleMapDisplay'
-let g:netrw_dirhist_8='/home/aurel/dev/local/flex'
-let g:netrw_dirhist_9='/home/aurel/dev/local/flex/googleMapDisplay'
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/home/aurel/.cache/keyring-NuQS5z'
+let g:netrw_dirhist_2='/home/aurel/dev/mcms3.3/mock/csv'
+let g:netrw_dirhist_3='/home/aurel/dev/mmsx/.git/hooks'

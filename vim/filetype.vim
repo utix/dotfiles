@@ -12,6 +12,7 @@ augroup filetypedetect
 
   au BufRead,BufNewFile *.tpl              setf xhtml
   au BufRead,BufNewFile *.as               setf actionscript
+  au BufRead,BufNewFile *.adoc             setf asciidoc
 
   au BufRead,BufNewFile COMMIT_EDITMSG     setf git
   au BufNewFile,BufRead *.git/config,*/.git/config,.gitconfig setf dosini

@@ -14,6 +14,7 @@ endif
 " Read the C syntax to start with
 runtime! syntax/c.vim
 unlet b:current_syntax
+highlight OverLength cterm=underline ctermbg=none ctermfg=none guibg=#592929
 
 " C++ extentions
 syn keyword cppStatement	new delete this friend using

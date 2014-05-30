@@ -18,13 +18,14 @@ exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n
 set path+=.;/
 
 set laststatus=2                " show status line?  Yes, always!
-if version >= 730
+if v:version >= 703
+"    set cursorline
     set undofile                             " Pour activer la feature
-    set undodir=~/.cache/vim/bkp,.           " Pour ranger tous les fichier d'undo
+    set undodir=~/.cache/vim/bkp           " Pour ranger tous les fichier d'undo
                                              " au même endroit
-endif
 au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
                                          " qui sont dans /tmp
+endif
 
 
 
@@ -38,7 +39,7 @@ set modelines=5
 set wildmode=longest,full
 
 set clipboard=unnamed          "used klipper for paste
-set grepprg=fds
+set grepprg=git\ grep\ -n
 hi SpecialKey cterm=bold ctermfg=DarkRed ctermbg=none
 
 au BufReadPost *
@@ -62,6 +63,15 @@ au FileType css  set et sts=4 sw=4
 au FileType sql  set et sts=4 sw=4
 au FileType actionscript  set et sts=4 sw=4
 
+au BufRead,BufNewFile *.blk,*.fc setf c
+au BufRead,BufNewFile *.blkk setf cpp
+
+let c_gnu=1
+let c_space_errors=1
+let c_no_curly_errors=1
+
+" IOP
+au BufRead,BufNewFile *.iop setf d
 set et sts=4 sw=4
 hi MatchParen   cterm=underline  ctermfg=none       ctermbg=none
 "command -nargs=+ Fds :cexpr system('fds -w <q-args>')
@@ -95,8 +105,11 @@ map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
 map <F6> ma
 map <F7> `a
+map <F8> :w<cr>:SyntasticCheck<cr>
+map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
+map <F11> :make P=debug NOCOMPRESS=1<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 map + :cn<cr>
 map - :cp<cr>
@@ -174,13 +187,11 @@ endfunction
 "set cinoptions+=,g2,h2         " indent C++ scope of 2, and the members from 2 from it
 
 set cinoptions=
-set cinoptions+=L0.5s          " align labels at 0.5 shiftwidth
-set cinoptions+=:0.5s,=0.5s    " same for case labels and code following a label
-set cinoptions+=g0.5s,h0.5s    " same for c++ stuff
 set cinoptions+=t0             " type on the line before the functions is not idented
+set cinoptions+=:2,=2          " indent case ...: of 2 from the switch {
 set cinoptions+=(0,Ws          " indent in functions ( ... ) when it breaks
+set cinoptions+=g2,h2          " indent C++ scope of 2, and the members from 2 from it
 set cinoptions+=m1             " aligh the closing ) properly
-set cinoptions+=j1,J1          " java/javscript -> fixes blocks
 
 let c_gnu=1
 let c_space_errors=1
@@ -194,6 +205,11 @@ if exists("syntax_on")
    syntax reset
 endif
 
+" a.vim
+let g:alternateRelativeFiles   = 1
+let g:alternateExtensions_blk  = "h"
+let g:alternateExtensions_blkk = "h"
+let g:alternateExtensions_h    = "c,cpp,cxx,cc,CC,blk,blkk"
 if has("gui_running")
     set guioptions=eit
     set guifont=terminus
@@ -269,7 +285,6 @@ fun! <SID>myhi(cls, m, fg, bg)
         exec "hi ".a:cls." cterm=".a:m." ctermfg=".<SID>Y(a:fg)." ctermbg=".<SID>Y(a:bg)
     endif
 endfun
-
 if has("gui_running") || &t_Co >= 88
     if has("gui_running")
         exec <SID>myhi("Normal",       "none",       "dfdfdf",    "00000f")
@@ -278,8 +293,8 @@ if has("gui_running") || &t_Co >= 88
         exec <SID>myhi("Normal",       "none",       "dfdfdf",    "NONE")
         exec <SID>myhi("MoreMsg",      "none",       "dfdfdf",    "NONE")
     endif
-    exec <SID>myhi("Comment",      "none",       "afafff",    "0f0f2f")
-    exec <SID>myhi("Folded",       "none",       "afafff",    "0f0f2f")
+    exec <SID>myhi("Comment",      "none",       "5F5F8A",    "NONE")
+    exec <SID>myhi("Folded",       "none",       "7C7CCB",    "NONE")
 
     exec <SID>myhi("SpecialKey",   "none",       "dfdfdf",    "0f0f2f")
     exec <SID>myhi("Todo",         "underline",  "yellow",    "333333")
@@ -289,6 +304,7 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Identifier",   "none",       "4fcfcf",    "NONE")
 
     exec <SID>myhi("Cursor",       "reverse",    "dfdfdf",    "black")
+"   exec <SID>myhi("CursorLine",   "none",       "NONE",      "111111")
     exec <SID>myhi("Visual",       "none",       "NONE",      "333333")
     exec <SID>myhi("IncSearch",    "none",       "black",     "yellow")
     exec <SID>myhi("Search",       "none",       "black",     "yellow")
@@ -315,10 +331,10 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Repeat",       "none",       "bf7f00",    "NONE")
     exec <SID>myhi("Statement",    "none",       "bf7f00",    "NONE")
 
-    exec <SID>myhi("StorageClass", "none",       "3fbf3f",    "NONE")
-    exec <SID>myhi("Type",         "none",       "3fbf3f",    "NONE")
-    exec <SID>myhi("Structure",    "none",       "3fbf3f",    "NONE")
-    exec <SID>myhi("Directory",    "none",       "3fbf3f",    "NONE")
+    exec <SID>myhi("StorageClass", "none",       "098209",    "NONE")
+    exec <SID>myhi("Type",         "none",       "098209",    "NONE")
+    exec <SID>myhi("Structure",    "none",       "098209",    "NONE")
+    exec <SID>myhi("Directory",    "none",       "098209",    "NONE")
 
     exec <SID>myhi("Include",      "none",       "bf0fbf",    "NONE")
     exec <SID>myhi("PreProc",      "none",       "bf0fbf",    "NONE")
@@ -330,14 +346,17 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Constant",     "none",       "bf0f0f",    "NONE")
 
     " diff
-    exec <SID>myhi("DiffAdd",      "none",       "NONE",      "002f0f")
-    exec <SID>myhi("DiffDelete",   "none",       "NONE",      "2f000f")
-    exec <SID>myhi("DiffChange",   "none",       "NONE",      "00003f")
-    exec <SID>myhi("DiffText",     "underline",  "NONE",      "00003f")
-    exec <SID>myhi("diffRemoved",  "none",       "bf0fbf",    "NONE")
+    exec <SID>myhi("DiffAdd",      "none",       "green",    "NONE")
+    exec <SID>myhi("DiffDelete",   "none",       "darkred",    "NONE")
+    exec <SID>myhi("DiffChange",   "none",       "NONE",      "333333")
+    exec <SID>myhi("DiffText",     "underline",  "NONE",      "NONE")
 
     " C
-    exec <SID>myhi("cFunction",    "none",       "b0b0b0",    "NONE")
+    exec <SID>myhi("cFunction",    "bold",       "75FFFD",    "NONE")
+    exec <SID>myhi("cString",      "bold", "FF7585" , "NONE")
+    exec <SID>myhi("ColorColumn",  "bold",       "NONE",      "202020")
+    exec <SID>myhi("Label",       "NONE",         "FFFF00", "NONE")
+    exec <SID>myhi("OverLength",   "NONE", "NONE",  "592929")
 else
     hi Comment      cterm=none       ctermfg=blue       ctermbg=none
     hi Folded       cterm=none       ctermfg=brown      ctermbg=none
@@ -367,3 +386,27 @@ endif
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
+setl foldmethod=marker
+call pathogen#infect()
+" syntastic {{{
+let g:syntastic_mode_map = { 'mode': 'inactive',
+                         \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'c', 'cpp' ],
+                         \ 'active_filetypes': [ ] }
+let g:syntastic_auto_loc_list=1
+let g:syntastic_auto_jump=0
+let g:syntastic_check_on_open=1
+let g:syntastic_silent_make=0
+
+let g:syntastic_c_checker = 'clang'
+let g:syntastic_c_compiler_options = ''
+let g:syntastic_c_include_dirs = [ ]
+let g:syntastic_c_no_include_search = 1
+let g:syntastic_c_no_default_include_dirs = 1
+
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = ''
+let g:syntastic_cpp_include_dirs = [ ]
+let g:syntastic_cpp_no_include_search = 1
+let g:syntastic_cpp_no_default_include_dirs = 1
+
+"}}}
