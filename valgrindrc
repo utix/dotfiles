@@ -1,0 +1,2 @@
+--memcheck:leak-check=full
+--memcheck:show-reachable=yes
