@@ -36,7 +36,7 @@
 
 [user]
        name  = Aurélien LAJOIE
-       email = aurelien.lajoie@intersec.com
+       email = orel@melix.net
 
 [color]
         branch = true
@@ -52,9 +52,3 @@
 
 [push]
     default = tracking
-
-[url "gitolite@git.corp:"]
-    insteadOf = git.corp:/srv/git/
-    insteadOf = ssh://git.corp/srv/git/
-[sendemail]
-    smtpserver = smtp.corp
