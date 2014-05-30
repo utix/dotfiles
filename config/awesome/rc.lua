@@ -16,7 +16,7 @@ require("debian.menu")
 theme_path = "/home/aurel/.config/awesome/themes/theme.lua"
 -- This is used later as the default terminal and editor to run.
 beautiful.init(theme_path)
-terminal = "rxvt-unicode"
+terminal = "xterm"
 lock     = 'xscreensaver-command -lock'
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
@@ -389,15 +389,17 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { instance = "kruler" },
       properties = { floating = true } },
-    { rule = { class = "psi" },
+    { rule = { instance = "kcalc" },
       properties = { floating = true } },
+    { rule = { class = "psi" },
+      properties = { floating = true, tag=tags[1][2] } },
     { rule = { class = "mocp" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
      { rule = { instance = "gecko" },
        properties = { tag = tags[1][1],
                       focus = true} },
-     { rule = { instance = "chromium" },
+     { rule = { class = "Google-chrome" },
        properties = { tag = tags[1][9],
                       focus = true} },
 }
@@ -430,8 +432,14 @@ client.add_signal("manage", function (c, startup)
     end
 end)
 
-client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.add_signal("focus", function(c)
+    c.border_color = theme.border_focus
+    c.opacity = 0.95
+end)
+client.add_signal("unfocus", function(c)
+    c.border_color = beautiful.border_normal
+    c.opacity = 0.9
+end)
 -- }}}
 
 awful.hooks.timer.register(30, function ()
@@ -448,10 +456,8 @@ awful.hooks.timer.register(30, function ()
     os.execute("~/.config/awesome/scripts/unread.py > /tmp/mail &")
 end)
 
-awful.util.spawn_with_shell("pkill xscreensaver ; xscreensaver -no-splash &")
-awful.util.spawn_with_shell("pkill klipper ; klipper")
-awful.util.spawn("psi")
-awful.util.spawn_with_shell("LC_ALL=fr_FR.UTF-8 icedove")
-awful.util.spawn_with_shell("chromium-browser")
 awful.util.spawn_with_shell("xset b off")
+awful.util.spawn_with_shell("vmware-user")
+awful.util.spawn_with_shell("xcompmgr")
+
 awful.util.spawn_with_shell("touch /tmp/mail")
