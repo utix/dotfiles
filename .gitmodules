@@ -1,0 +1,3 @@
+[submodule "+vim-phpcs"]
+	path = +vim-phpcs
+	url = https://github.com/bpearson/vim-phpcs.git
