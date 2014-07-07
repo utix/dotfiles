@@ -21,3 +21,7 @@ syn match cType "\<[a-zA-Z_][a-zA-Z0-9_]*_[ft]\>"
 hi def link isGlobal Function
 hi def link cStructure Type
 hi def link cStorageClass Statement
+map + :cn<cr>
+map - :cp<cr>
+map <kPlus> :cn<cr>
+map <kMinus> :cp<cr>

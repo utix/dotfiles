@@ -105,20 +105,16 @@ map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
 map <F6> ma
 map <F7> `a
-"map <F8> :w<cr>:SyntasticCheck<cr>
-"map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
-map <C-F8> :w<cr>:CodeSniffErrorOnly<CR>
-map! <C-F8> <Esc>:w<cr>:CodeSniffErrorOnly<CR>
-map <F8> :w<cr>:CodeSniff<CR>
-map! <F8> <Esc>:w<cr>:CodeSniff<CR>a
+map <F8> :w<cr>:SyntasticCheck<cr>
+map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 map <F11> :make P=debug NOCOMPRESS=1<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
-map + :cn<cr>
-map - :cp<cr>
-map <kPlus> :cn<cr>
-map <kMinus> :cp<cr>
+map + :lnext<cr>
+map - :lprevious<cr>
+map <kPlus> :ln<cr>
+map <kMinus> :lp<cr>
 
 "map! <PageUp> 25<Up>
 "map <PageUp> 25<Up>
@@ -392,13 +388,12 @@ hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
 setl foldmethod=marker
 call pathogen#infect()
-let Vimphpcs_Standard='Prestashop'
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
                          \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'c', 'cpp' ],
                          \ 'active_filetypes': [ ] }
 let g:syntastic_auto_loc_list=1
-let g:syntastic_auto_jump=0
+let g:syntastic_auto_jump=1
 let g:syntastic_check_on_open=1
 let g:syntastic_silent_make=0
 
@@ -413,5 +408,7 @@ let g:syntastic_cpp_compiler_options = ''
 let g:syntastic_cpp_include_dirs = [ ]
 let g:syntastic_cpp_no_include_search = 1
 let g:syntastic_cpp_no_default_include_dirs = 1
+
+let g:syntastic_php_checkers = ['php', 'phpmd', 'phpcs']
 
 "}}}
