@@ -105,8 +105,12 @@ map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
 map <F6> ma
 map <F7> `a
-map <F8> :w<cr>:SyntasticCheck<cr>
-map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
+"map <F8> :w<cr>:SyntasticCheck<cr>
+"map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
+map <C-F8> :CodeSniffErrorOnly<CR>
+map! <C-F8> <Esc>:CodeSniffErrorOnly<CR>
+map <F8> :CodeSniff<CR>
+map! <F8> <Esc>:CodeSniff<CR>a
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 map <F11> :make P=debug NOCOMPRESS=1<cr>
@@ -388,6 +392,7 @@ hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
 setl foldmethod=marker
 call pathogen#infect()
+let Vimphpcs_Standard='Prestashop'
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
                          \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'c', 'cpp' ],
