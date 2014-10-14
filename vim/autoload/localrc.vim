@@ -1,0 +1,1 @@
+../../+vim-localrc/autoload/localrc.vim
