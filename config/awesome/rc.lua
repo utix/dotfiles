@@ -457,7 +457,11 @@ awful.hooks.timer.register(30, function ()
 end)
 
 awful.util.spawn_with_shell("xset b off")
-awful.util.spawn_with_shell("vmware-user")
-awful.util.spawn_with_shell("xcompmgr")
+--awful.util.spawn_with_shell("vmware-user")
+--awful.util.spawn_with_shell("xcompmgr")
+awful.util.spawn_with_shell("pkill xscreensaver ; xscreensaver -no-splash &")
+awful.util.spawn_with_shell("pkill clipit ; clipit")
+awful.util.spawn_with_shell("pkill synergy ; synergy")
+
 
 awful.util.spawn_with_shell("touch /tmp/mail")
