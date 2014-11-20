@@ -51,7 +51,7 @@ fi
 
 # Pour plus de sécurité
 [[ $UID == 0 ]] && export PS1='\[\033[00;36m\][\h\[\033[00m\]:\w\[\033[00;36m\]]\[\033[00m\] \[\033[01;31m\]\u# \[\033[00m\]'
-export LC_ALL="en_US.UTF-8"
+export LC_ALL="en_AU.UTF-8"
 
 
 # This line was appended by KDE

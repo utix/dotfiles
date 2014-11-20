@@ -96,7 +96,6 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 
 -- {{{ Wibox
 -- Create a textclock widget
-os.setlocale ("fr_FR.utf8", "time")
 mytextclock = awful.widget.textclock({ align = "right" })
 mymail = widget({ type = "textbox", align = "right" })
 mymail.text = "<b><small> mail </small></b>"
@@ -463,5 +462,7 @@ awful.util.spawn_with_shell("pkill xscreensaver ; xscreensaver -no-splash &")
 awful.util.spawn_with_shell("pkill clipit ; clipit")
 awful.util.spawn_with_shell("pkill synergy ; synergy")
 
+-- need by synergy
+awful.util.spawn_with_shell("setxkbmap fr")
 
 awful.util.spawn_with_shell("touch /tmp/mail")
