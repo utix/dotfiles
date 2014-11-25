@@ -497,5 +497,6 @@ awful.util.spawn_with_shell("pkill synergy ; synergy")
 
 -- need by synergy
 awful.util.spawn_with_shell("setxkbmap fr")
+awful.util.spawn_with_shell("pkill ownclound ; ownclound")
 
 awful.util.spawn_with_shell("touch /tmp/mail")
