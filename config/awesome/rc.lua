@@ -125,6 +125,12 @@ calendar2.addCalendarToWidget(mytextclock, "<span color=\"yellow\"><b>%s</b></sp
 
 mymail = widget({ type = "textbox", align = "right" })
 mymail.text = "<b><small> mail </small></b>"
+
+sshagentimg = widget({ type = "imagebox" })
+sshagentimg.image = image("/home/aurel/.config/awesome/themes/lock-icon.png")
+require('sshagent')
+sshagent.addAgentToWidget(sshagentimg, io, image)
+
 -- Create a systray
 mysystray = widget({ type = "systray" })
 
@@ -199,6 +205,7 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
         mymail,
+        sshagentimg,
         s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
