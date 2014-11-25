@@ -120,6 +120,9 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 -- {{{ Wibox
 -- Create a textclock widget
 mytextclock = awful.widget.textclock({ align = "right" })
+require('calendar2')
+calendar2.addCalendarToWidget(mytextclock, "<span color=\"yellow\"><b>%s</b></span>")
+
 mymail = widget({ type = "textbox", align = "right" })
 mymail.text = "<b><small> mail </small></b>"
 -- Create a systray
