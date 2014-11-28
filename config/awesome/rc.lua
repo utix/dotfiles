@@ -6,7 +6,7 @@ require("awful.rules")
 require("beautiful")
 -- Notification library
 naughty = require("naughty")
-
+vicious = require("vicious")
 -- Load Debian menu entries
 require("debian.menu")
 
@@ -119,11 +119,11 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" })
+mytextclock = awful.widget.textclock()
 require('calendar2')
 calendar2.addCalendarToWidget(mytextclock, "<span color=\"yellow\"><b>%s</b></span>")
 
-mymail = widget({ type = "textbox", align = "right" })
+mymail = widget({ type = "textbox"})
 mymail.text = "<b><small> mail </small></b>"
 
 sshagentimg = widget({ type = "imagebox" })
@@ -131,6 +131,16 @@ sshagentimg.image = image("/home/aurel/.config/awesome/themes/lock-icon.png")
 require('sshagent')
 sshagent.addAgentToWidget(sshagentimg, io, image)
 
+-- Initialize widget
+cpuwidget = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
+-- Graph properties
+cpuwidget:set_width(50)
+cpuwidget:set_background_color("#494B4F")
+cpuwidget:set_color("#FF5656")
+cpuwidget:set_gradient_angle(0)
+cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
+-- Register widget
+vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
 -- Create a systray
 mysystray = widget({ type = "systray" })
 
@@ -200,15 +210,16 @@ for s = 1, screen.count() do
             mylauncher,
             mytaglist[s],
             mypromptbox[s],
-            layout = awful.widget.layout.horizontal.leftright
+            ["layout"] = awful.widget.layout.horizontal.leftright
         },
         mylayoutbox[s],
         mytextclock,
         mymail,
+        cpuwidget,
         sshagentimg,
         s == 1 and mysystray or nil,
         mytasklist[s],
-        layout = awful.widget.layout.horizontal.rightleft
+        ["layout"] = awful.widget.layout.horizontal.rightleft
     }
 end
 -- }}}
