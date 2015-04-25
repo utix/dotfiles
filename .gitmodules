@@ -10,3 +10,6 @@
 [submodule "vim/bundle/vim-javascript"]
 	path = vim/bundle/vim-javascript
 	url = git@github.com:utix/vim-javascript.git
+[submodule "vim/bundle/vim-phpcs"]
+	path = vim/bundle/vim-phpcs
+	url = git@github.com:utix/vim-phpcs.git
