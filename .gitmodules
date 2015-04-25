@@ -7,3 +7,6 @@
 [submodule "+vim-localrc"]
 	path = +vim-localrc
 	url = https://github.com/thinca/vim-localrc.git
+[submodule "vim/bundle/vim-javascript"]
+	path = vim/bundle/vim-javascript
+	url = git@github.com:utix/vim-javascript.git
