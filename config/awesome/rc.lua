@@ -44,7 +44,7 @@ layouts =
 --    awful.layout.suit.max,
  --   awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
---    awful.layout.suit.floating
+    awful.layout.suit.floating
 }
 -- }}}
 -- {{{ Error handling
@@ -431,6 +431,8 @@ awful.rules.rules = {
     { rule = { class = "gimp" },
       properties = { floating = true } },
     { rule = { instance = "kruler" },
+      properties = { floating = true } },
+    { rule = { role = "Msgcompose" },
       properties = { floating = true } },
     { rule = { instance = "kcalc" },
       properties = { floating = true } },
