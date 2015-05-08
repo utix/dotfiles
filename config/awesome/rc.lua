@@ -484,7 +484,7 @@ end)
 
 client.add_signal("focus", function(c)
     c.border_color = theme.border_focus
-    c.opacity = 0.95
+    c.opacity = 1
 end)
 client.add_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
