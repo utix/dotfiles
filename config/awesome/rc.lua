@@ -134,18 +134,39 @@ sshagent.addAgentToWidget(sshagentimg, io, image)
 -- Initialize widget
 cpuwidget = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
 -- Graph properties
-cpuwidget:set_width(50)
+cpuwidget:set_width(150)
 cpuwidget:set_background_color("#494B4F")
 cpuwidget:set_color("#FF5656")
 cpuwidget:set_gradient_angle(0)
 cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
 -- Register widget
 vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
+-- Initialize widget
+dummytxt =  widget({ type = "textbox"})
+vicious.cache(vicious.widgets.net)
+netwidget = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
+netwidget:set_width(150)
+netwidget:set_scale(true)
+netwidget:set_background_color("#494B4F")
+netwidget:set_color("#0020C2")
+netwidget2 = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
+netwidget2:set_width(150)
+netwidget2:set_scale(true)
+netwidget2:set_background_color("#494B4F")
+netwidget2:set_color("#54C571")
+-- Register widget
+vicious.register(dummytxt, vicious.widgets.net,
+function (widget, args)
+    -- Update the graph
+    netwidget:add_value(args["{eth0 down_b}"])
+    netwidget2:add_value(args["{eth0 up_b}"])
+end, 3)
 -- Create a systray
 mysystray = widget({ type = "systray" })
 
 -- Create a wibox for each screen and add it
 mywibox = {}
+bottombox = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -204,7 +225,18 @@ for s = 1, screen.count() do
 
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", screen = s })
+    bottombox[s] = awful.wibox({ position = "bottom", screen = s, height="24" })
     -- Add widgets to the wibox - order matters
+    bottombox[s].widgets = {
+        {
+            s == 1 and mysystray or nil,
+            ["layout"] = awful.widget.layout.horizontal.leftright
+        },
+        cpuwidget,
+        netwidget,
+        netwidget2,
+        ["layout"] = awful.widget.layout.horizontal.rightleft
+    }
     mywibox[s].widgets = {
         {
             mylauncher,
@@ -215,9 +247,7 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
         mymail,
-        cpuwidget,
         sshagentimg,
-        s == 1 and mysystray or nil,
         mytasklist[s],
         ["layout"] = awful.widget.layout.horizontal.rightleft
     }
@@ -427,6 +457,8 @@ awful.rules.rules = {
                      border_color = beautiful.border_normal,
                      focus = true,
                      keys = clientkeys,
+                     maximized_vertical = false,
+                     maximized_horizontal = false,
                      buttons = clientbuttons } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
@@ -524,3 +556,4 @@ awful.util.spawn_with_shell("setxkbmap fr")
 run_once("ownclound")
 
 awful.util.spawn_with_shell("touch /tmp/mail")
+awful.tag.setnmaster(3)
