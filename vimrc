@@ -192,6 +192,7 @@ set cinoptions+=:2,=2          " indent case ...: of 2 from the switch {
 set cinoptions+=(0,Ws          " indent in functions ( ... ) when it breaks
 set cinoptions+=g2,h2          " indent C++ scope of 2, and the members from 2 from it
 set cinoptions+=m1             " aligh the closing ) properly
+set cinoptions+=L0.5s
 
 let c_gnu=1
 let c_space_errors=1
