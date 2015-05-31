@@ -188,7 +188,7 @@ function (widget, args)
     netwidget2:add_value(args["{eth0 up_b}"])
 end, 3)
 -- Create a systray
-mysystray = widget({ type = "systray" })
+mysystray = widget({ type = "systray", align = "left" })
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -372,7 +372,7 @@ globalkeys = awful.util.table.join(
 )
 
 function get_volume()
-   local f = io.popen('amixer get PCM')
+   local f = io.popen( "pactl list sinks | grep \"Volume: 0:\"| awk '{print $3}'")
    local l = f:lines()
    local v = ''
 
@@ -388,9 +388,8 @@ function get_volume()
 end
 
 function update_volume(incr)
-    local v = get_volume()
-    v = v + incr
-    io.popen('amixer set PCM ' .. v ..'%')
+    io.popen('pactl set-sink-volume 0 -- ' .. incr ..'%')
+    io.popen('pactl set-sink-volume 1 -- ' .. incr ..'%')
  --   if (incr > 0) then
  --       volumewidget.text = string.format("↑%s%%", v)
  --   else
@@ -413,8 +412,8 @@ clientkeys = awful.util.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
         end),
-    awful.key({"Control" }, "Page_Up", function () update_volume(5)                         end),
-    awful.key({"Control" }, "Page_Down", function () update_volume(-5)                         end)
+    awful.key({}, "XF86AudioRaiseVolume", function () update_volume("+5")   end),
+    awful.key({}, "XF86AudioLowerVolume", function () update_volume("-5")   end)
 )
 
 -- Compute the maximum number of digit we need, limited to 9
@@ -498,10 +497,14 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { role = "Msgcompose" },
       properties = { floating = true } },
+    { rule = { role = "pop-up"},
+      properties = {floating = true} },
     { rule = { instance = "kcalc" },
       properties = { floating = true } },
     { rule = { class = "psi" },
       properties = { floating = true, tag=tags[1][2] } },
+    { rule = { class = "ckb" },
+      properties = { floating = true} },
     { rule = { class = "mocp" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
@@ -577,11 +580,14 @@ awful.util.spawn_with_shell("xset b off")
 --awful.util.spawn_with_shell("vmware-user")
 awful.util.spawn_with_shell("xcompmgr")
 run_once("klipper")
+run_once("ckb --background")
 run_once("xscreensaver -no-splash")
 run_once("synergy")
 -- need by synergy
 awful.util.spawn_with_shell("setxkbmap fr")
 run_once("ownclound")
+run_once("nm-applet")
+run_once("icedove")
+run_once("google-chrome")
 
 awful.util.spawn_with_shell("touch /tmp/mail")
-awful.tag.setnmaster(3)
