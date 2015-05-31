@@ -121,7 +121,7 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 require('calendar2')
-calendar2.addCalendarToWidget(mytextclock, "<span color=\"yellow\"><b>%s</b></span>")
+calendar2.addCalendarToWidget(mytextclock, io, "<span color=\"yellow\"><b>%s</b></span>")
 
 mymail = widget({ type = "textbox"})
 mymail.text = "<b><small> mail </small></b>"

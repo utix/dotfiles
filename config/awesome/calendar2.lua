@@ -8,9 +8,11 @@ local string = string
 --local print = print
 local tostring = tostring
 local os = os
+local io_m
 local capi = {
     mouse = mouse,
-    screen = screen
+    screen = screen,
+    image = image
 }
 local awful = require("awful")
 local naughty = require("naughty")
@@ -18,7 +20,7 @@ module("calendar2")
 
 local calendar = {}
 local current_day_format = "<u>%s</u>"
-
+local locale = 'Australia/Melbourne'
 function displayMonth(month,year,weekStart)
         local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
         local d=os.date("*t",t)
@@ -55,9 +57,11 @@ function displayMonth(month,year,weekStart)
                 lines = lines .. "  " .. x
                 writeLine = writeLine + 1
         end
-        local header = os.date("%B %Y\n",os.time{year=year,month=month,day=1})
+        local f = io_m.popen("TZ='"..locale.."' date +%H:%M")
+        local s = f:read('*a')
+        local header = os.date("%B %Y  ",os.time{year=year,month=month,day=1})..s
 
-        return header .. "\n" .. lines
+        return header .. "\n\n" .. lines
 end
 
 function switchNaughtyMonth(switchMonths)
@@ -65,16 +69,19 @@ function switchNaughtyMonth(switchMonths)
         local swMonths = switchMonths or 1
         calendar[1] = calendar[1] + swMonths
         calendar[3].box.widgets[2].text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(calendar[1], calendar[2], 2))
+        calendar[3].box.widgets[1].image = capi.image("/home/aurel/.config/awesome/themes/"..locale..".png")
 end
 
-function addCalendarToWidget(mywidget, custom_current_day_format)
+function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
+  io_m = io_master
   if custom_current_day_format then current_day_format = custom_current_day_format end
 
   mywidget:add_signal('mouse::enter', function ()
         local month, year = os.date('%m'), os.date('%Y')
         calendar = { month, year,
         naughty.notify({
-                text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(month, year, 2)),
+                text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(month, year, 2, 'Australia/Melbourne')),
+                icon="/home/aurel/.config/awesome/themes/"..locale..".png",
                 timeout = 0,
                 hover_timeout = 0.5,
                 screen = capi.mouse.screen
@@ -86,6 +93,14 @@ function addCalendarToWidget(mywidget, custom_current_day_format)
   mywidget:buttons(awful.util.table.join(
     awful.button({ }, 1, function()
         switchNaughtyMonth(-1)
+    end),
+    awful.button({ }, 10, function()
+        locale = 'Europe/Paris'
+        switchNaughtyMonth(0)
+    end),
+    awful.button({ }, 11, function()
+        locale = 'Australia/Melbourne'
+        switchNaughtyMonth(0)
     end),
     awful.button({ }, 3, function()
         switchNaughtyMonth(1)
