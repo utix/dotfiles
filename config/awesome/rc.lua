@@ -141,6 +141,32 @@ cpuwidget:set_gradient_angle(0)
 cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
 -- Register widget
 vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
+
+fancpuwidget = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
+fancpuwidget:set_width(150)
+fancpuwidget:set_background_color("#494B4F")
+fancpuwidget:set_color("#FF5656")
+fancpuwidget:set_gradient_angle(0)
+fancpuwidget:set_gradient_colors({ "#0a85ff", "#56abff", "#a3d1ff" })
+fancpuwidget:set_max_value(5000);
+
+tempcpuwidget = awful.widget.graph({ layout = awful.widget.layout.horizontal.rightleft})
+tempcpuwidget:set_width(150)
+tempcpuwidget:set_background_color("#494B4F")
+tempcpuwidget:set_color("#FF5656")
+tempcpuwidget:set_gradient_angle(0)
+tempcpuwidget:set_gradient_colors({ "#FF5656", "#ffff56", "#56abff" })
+tempcpuwidget:set_max_value(35);
+
+awful.hooks.timer.register(1, function ()
+    local f = io.open('/sys/class/hwmon/hwmon1/device/fan2_input')
+    local v = f:read()
+    f:close()
+    fancpuwidget:add_value(v)
+    f = io.open('/sys/class/hwmon/hwmon0/device/temp1_input')
+    v = f:read() / 1000 - 20
+    tempcpuwidget:add_value(v)
+end)
 -- Initialize widget
 dummytxt =  widget({ type = "textbox"})
 vicious.cache(vicious.widgets.net)
@@ -233,6 +259,8 @@ for s = 1, screen.count() do
             ["layout"] = awful.widget.layout.horizontal.leftright
         },
         cpuwidget,
+        tempcpuwidget,
+        fancpuwidget,
         netwidget,
         netwidget2,
         ["layout"] = awful.widget.layout.horizontal.rightleft
