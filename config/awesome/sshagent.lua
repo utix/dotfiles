@@ -32,7 +32,7 @@ function addAgentToWidget(mywidget, io_master, image_master)
     end)
   mywidget:buttons(awful.util.table.join(
     awful.button({ }, 1, function()
-        awful.util.spawn("ssh-add")
+        awful.util.spawn("ssh-add -t 43200 -c")
     end)
   ))
   key_check =  function ()
