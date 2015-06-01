@@ -24,6 +24,7 @@
 	squash=commit -s --amend -C HEAD
 	amend=commit -s --amend
         post-review=send-email --no-chain-reply-to --suppress-cc all --suppress-from --no-signed-off-by-cc --annotate --compose --to corp.software.review@news.intersec.com -C -C -M
+        lg=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 [pager]
 	color = true
 [diff]
