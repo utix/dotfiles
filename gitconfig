@@ -37,21 +37,26 @@
 
 [user]
        name  = Aurélien LAJOIE
-       email = orel@melix.net
+       email = <aurelien.lajoie@utix.fr>
 
 [color]
         branch = true
         status = true
+        grep   = true
 
 [color "status"]
         header = bold blue
         added  = green
         changed = bold red
-        untracked = bold yellow
+        untracked = yellow
 [merge]
         verbosity = 1
 
 [push]
     default = tracking
+
+[grep]
+    lineNumber = true
+    color = always
 [rerere]
     enabled = true
