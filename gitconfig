@@ -3,28 +3,18 @@
         branche=branch
         branch=branch
         co=checkout
+        ri = rebase -i
         st=status
         undo=reset HEAD~1
-        orel=checkout orel --
-        master=checkout master --
-        mcms=checkout mcms --
-        teaser=checkout teaser --
-        flash=checkout flash --
-        local=checkout local --
-        nfs=checkout nfs --
-        prod=checkout mcms/2.7.1-final
         tempo=commit -a -m tempo
-        kprod=!gitk  mcms/3.0 origin/mcms/3.0 ^origin/mcms/3.0~200 --&
-        kdev=!gitk local master origin/master ^master~200 --&
+        master=checkout master --
         willpush=log origin/master..master
-        pushnfs = push origin refs/heads/nfs:refs/heads/master
-        pushlocal = push origin refs/heads/local:refs/heads/master
-        pushprodlocal = push origin refs/heads/prodlocal:refs/heads/mcms/3.1/master
-        push3 = push origin refs/heads/mcms/3.0:refs/heads/mcms/3.0
 	squash=commit -s --amend -C HEAD
 	amend=commit -s --amend
         post-review=send-email --no-chain-reply-to --suppress-cc all --suppress-from --no-signed-off-by-cc --annotate --compose --to corp.software.review@news.intersec.com -C -C -M
         lg=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+        workdir = !sh /usr/share/doc/git/contrib/workdir/git-new-workdir
+
 [pager]
 	color = true
 [diff]
@@ -49,8 +39,16 @@
         added  = green
         changed = bold red
         untracked = yellow
+[color "diff"]
+       meta = green
+       frag = yellow
+       old = magenta
+       new = bold cyan
+
 [merge]
         verbosity = 1
+        conflictstyle = diff3
+        stat = true
 
 [push]
     default = tracking
