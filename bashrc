@@ -67,8 +67,8 @@ if [ `uname -s` == "SunOS" ]; then
     LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib:/opt/csw/lib
 fi
 export LD_LIBRARY_PATH
-if [ -d /var/tmp/aurel/ccache ] ; then
-    export CCACHE_DIR=/var/tmp/aurel/ccache
+if [ -d /home/aurel/.ccache ] ; then
+    export CCACHE_DIR=/home/aurel/.ccache
     export PATH="/usr/lib/ccache:${PATH}"
     export CCACHE_NOCOMPRESS=1
 fi
@@ -77,3 +77,10 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 setterm -blength 0
+lastcore () {
+    CORE_PATH=/srv/data/cores/
+    CORE=$(ls -rt $CORE_PATH | tail -n1)
+    CORE_EXE=$(echo $CORE | sed -e "s/\(.*\)\..*\..*\..*/\1/")
+    CORE_EXE_PATH=$(find . -type f -name $CORE_EXE -print -quit)
+    gdb $CORE_EXE_PATH $CORE_PATH$CORE "$@"
+}
