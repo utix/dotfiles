@@ -27,8 +27,6 @@ au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
                                          " qui sont dans /tmp
 endif
 
-
-
 set listchars=eol:\ ,tab:\ \ ,trail:-,extends:>,precedes:<
 set list
 set virtualedit+=block
@@ -77,7 +75,6 @@ hi MatchParen   cterm=underline  ctermfg=none       ctermbg=none
 "command -nargs=+ Fds :cexpr system('fds -w <q-args>')
 let g:bufExplorerFindActive=0
 set pastetoggle=<F4>
-noremap <F5> :source ~/.vimrc<cr>
 noremap <F1>   :nohls<cr>
 map! <F1>  <C-o>:nohls<cr>
 map <F2> <C-]>
@@ -103,19 +100,30 @@ map! <C-Down>  <Esc> <C-w><Down>
 map <F3> \be
 map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
+" spell check
+map <F5> :setlocal spell! spelllang=en_us<CR>
 map <F6> ma
 map <F7> `a
 map <F8> :w<cr>:SyntasticCheck<cr>
 map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
+"set makeprg=LC_ALL=C\ unbuffer\ make
 map <F11> :make P=debug NOCOMPRESS=1<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
-map + :lnext<cr>
-map - :lprevious<cr>
-map <kPlus> :ln<cr>
-map <kMinus> :lp<cr>
 
+" next compilation error
+map +        :cnext<cr>
+map <kPlus>  :cnext<CR>
+" previous compilation error
+map -        :cprev<cr>
+map <kMinus> :cprev<CR>
+" next syntastic error
+map <S-Right> :lnext<cr>
+" previous syntastic error
+map <S-Left> :lprev<cr>
+
+nnoremap \s ea<C-X><C-S>
 "map! <PageUp> 25<Up>
 "map <PageUp> 25<Up>
 "map! <PageDown> 25<Down>
@@ -193,6 +201,8 @@ set cinoptions+=(0,Ws          " indent in functions ( ... ) when it breaks
 set cinoptions+=g2,h2          " indent C++ scope of 2, and the members from 2 from it
 set cinoptions+=m1             " aligh the closing ) properly
 set cinoptions+=L0.5s
+set cinoptions+=j1             " java/javascript -> fixes blocks
+set cinoptions+=l0.5s          " align code after label ignoring braces.
 
 let c_gnu=1
 let c_space_errors=1
@@ -204,6 +214,14 @@ set background=light
 hi clear
 if exists("syntax_on")
    syntax reset
+endif
+
+if version >= 703
+    set cc=+1
+    hi ColorColumn cterm=none ctermfg=none ctermbg=darkgray
+else
+    au FileType c,cpp match OverLength /\%79v.\+/
+    hi OverLength cterm=none ctermfg=none ctermbg=darkblue
 endif
 
 " a.vim
@@ -322,10 +340,10 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("PmenuSbar",    "none",       "white",     "0f0f2f")
     exec <SID>myhi("PmenuThumb",   "none",       "3f3f7f",    "3f3f7f")
 
-    exec <SID>myhi("SpellBad",     "none",       "NONE",      "800000")
-    exec <SID>myhi("SpellCap",     "none",       "NONE",      "004000")
-    exec <SID>myhi("SpellLocal",   "none",       "NONE",      "004000")
-    exec <SID>myhi("SpellRare",    "none",       "NONE",      "NONE")
+    exec <SID>myhi("SpellBad",     "underline",  "FF8362",    "NONE")
+    exec <SID>myhi("SpellCap",     "none",       "lightred",  "NONE")
+    exec <SID>myhi("SpellLocal",   "underline",  "darkgreen", "NONE")
+    exec <SID>myhi("SpellRare",    "underline",  "yellow",    "NONE")
 
     exec <SID>myhi("Label",        "none",       "bf7f00",    "NONE")
     exec <SID>myhi("Conditional",  "none",       "bf7f00",    "NONE")
@@ -333,7 +351,7 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Statement",    "none",       "bf7f00",    "NONE")
 
     exec <SID>myhi("StorageClass", "none",       "098209",    "NONE")
-    exec <SID>myhi("Type",         "none",       "098209",    "NONE")
+    exec <SID>myhi("Type",         "none",       "0eca0e",    "NONE")
     exec <SID>myhi("Structure",    "none",       "098209",    "NONE")
     exec <SID>myhi("Directory",    "none",       "098209",    "NONE")
 
@@ -343,21 +361,28 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("SpecialChar",  "none",       "bf0fbf",    "NONE")
 
     exec <SID>myhi("Character",    "none",       "bf0f0f",    "NONE")
-    exec <SID>myhi("String",       "none",       "bf0f0f",    "NONE")
+    exec <SID>myhi("String",       "none",       "FF7585",    "NONE")
     exec <SID>myhi("Constant",     "none",       "bf0f0f",    "NONE")
 
     " diff
-    exec <SID>myhi("DiffAdd",      "none",       "green",    "NONE")
-    exec <SID>myhi("DiffDelete",   "none",       "darkred",    "NONE")
+    exec <SID>myhi("DiffAdd",      "none",       "green",     "NONE")
+    exec <SID>myhi("DiffDelete",   "none",       "darkred",   "NONE")
     exec <SID>myhi("DiffChange",   "none",       "NONE",      "333333")
     exec <SID>myhi("DiffText",     "underline",  "NONE",      "NONE")
 
     " C
     exec <SID>myhi("cFunction",    "bold",       "75FFFD",    "NONE")
-    exec <SID>myhi("cString",      "bold", "FF7585" , "NONE")
+    exec <SID>myhi("cString",      "bold",       "FF7585" ,   "NONE")
+    exec <SID>myhi("cStructure",   "none",       "055005" ,   "NONE")
     exec <SID>myhi("ColorColumn",  "bold",       "NONE",      "202020")
-    exec <SID>myhi("Label",       "NONE",         "FFFF00", "NONE")
-    exec <SID>myhi("OverLength",   "NONE", "NONE",  "592929")
+    exec <SID>myhi("Label",        "none",       "FFFF00",    "NONE")
+    exec <SID>myhi("OverLength",   "none",       "NONE",      "592929")
+    " Python
+    exec <SID>myhi("pythonStatement",   "none",  "1E90FF",    "NONE")
+    exec <SID>myhi("pythonConditional", "none",  "1E90FF",    "NONE")
+    exec <SID>myhi("pythonFunction",    "bold",  "3CB371",    "NONE")
+    exec <SID>myhi("pythonOperator",    "none",  "3CB371",    "NONE")
+    exec <SID>myhi("Exception",         "bold",  "FFFF33",    "NONE")
 else
     hi Comment      cterm=none       ctermfg=blue       ctermbg=none
     hi Folded       cterm=none       ctermfg=brown      ctermbg=none
@@ -383,7 +408,6 @@ else
     hi SpellLocal   cterm=underline  ctermfg=darkgreen  ctermbg=none
     hi SpellRare    cterm=none       ctermfg=none       ctermbg=none
 endif
-
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
@@ -391,14 +415,15 @@ setl foldmethod=marker
 call pathogen#infect()
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
-                         \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'c', 'cpp' ],
+                         \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript',  'cpp', 'c' ],
                          \ 'active_filetypes': [ ] }
+let g:syntastic_ignore_files = ['^/usr/include/']
 let g:syntastic_auto_loc_list=1
-let g:syntastic_auto_jump=1
+let g:syntastic_auto_jump=0
 let g:syntastic_check_on_open=1
 let g:syntastic_silent_make=0
 
-let g:syntastic_c_checker = 'clang'
+let g:syntastic_c_compiler = 'clang'
 let g:syntastic_c_compiler_options = ''
 let g:syntastic_c_include_dirs = [ ]
 let g:syntastic_c_no_include_search = 1
@@ -410,6 +435,30 @@ let g:syntastic_cpp_include_dirs = [ ]
 let g:syntastic_cpp_no_include_search = 1
 let g:syntastic_cpp_no_default_include_dirs = 1
 
+let g:syntastic_python_checkers = ['pylint']
+
 let g:syntastic_php_checkers = ['php', 'phpmd', 'phpcs']
+" let :E :Explore (syntastic defines an Errors command which makes :E
+" ambiguous)
+command! -nargs=* -bar -bang -count=0 -complete=dir E Explore <args>
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsListSnippets        = "<F2>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+
+let g:UltiSnipsEditSplit = 'vertical'
+
+" a.vim
+let g:alternateRelativeFiles   = 1
+let g:alternateExtensions_blk  = "h"
+let g:alternateExtensions_blkk = "h"
+let g:alternateExtensions_h    = "c,cpp,cxx,cc,CC,blk,blkk"
+
+" ctrlp
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files && git submodule -q foreach ''for file in $(git ls-files); do echo $name/$file; done''']
+
 
 "}}}
+"
