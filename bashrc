@@ -50,7 +50,6 @@ if [ "$PS1" ]; then
 fi
 
 # Pour plus de sécurité
-export LC_ALL="en_AU.UTF-8"
 [[ $UID == 0 ]] && export PS1='\[\033[00;36m\][\h\[\033[00m\]: \w\[\033[00;36m\]]\[\033[00m\] \[\033[01;31m\]\u# \[\033[00m\]'
 
 
