@@ -13,3 +13,6 @@
 [submodule "vim/bundle/vim-phpcs"]
 	path = vim/bundle/vim-phpcs
 	url = git@github.com:utix/vim-phpcs.git
+[submodule "vim/bundle/file-line"]
+	path = vim/bundle/file-line
+	url = git@github.com:utix/file-line.git
