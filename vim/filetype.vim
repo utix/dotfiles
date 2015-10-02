@@ -5,10 +5,15 @@ endif
 augroup filetypedetect
   au BufRead,BufNewFile *.ml,*.mli         setf omlet
   au BufRead,BufNewFile *.JS               setf javascript
+  au BufRead,BufNewFile *.cf               setf javascript
   au BufRead,BufNewFile *.jas              setf asm
   au BufRead,BufNewFile *.swfml            setf xml
   au BufRead,BufNewFile *.iop              setf d
   au BufRead,BufNewFile *.blk              setf c
+  au BufRead,BufNewFile *.ini.example      setf dosini
+
+  au BufNewFile,BufRead *.pde,*.ino        setf c
+  au BufNewFile,BufRead *.pde,*.ino        setl fileencoding=latin1
 
   au BufRead,BufNewFile *.tpl              setf xhtml
   au BufRead,BufNewFile *.as               setf actionscript
@@ -19,6 +24,7 @@ augroup filetypedetect
 
   " HTML (.shtml and .stm for server side)
   au BufNewFile,BufRead *.html,*.htm,*.shtml,*.stm  call s:FThtml()
+
 
   " Distinguish between HTML, XHTML and Django
   fun! s:FThtml()
