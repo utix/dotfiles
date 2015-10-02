@@ -76,7 +76,6 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
-setterm -blength 0
 lastcore () {
     CORE_PATH=/srv/data/cores/
     CORE=$(ls -rt $CORE_PATH | tail -n1)
@@ -84,3 +83,4 @@ lastcore () {
     CORE_EXE_PATH=$(find . -type f -name $CORE_EXE -print -quit)
     gdb $CORE_EXE_PATH $CORE_PATH$CORE "$@"
 }
+
