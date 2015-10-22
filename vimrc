@@ -4,7 +4,6 @@ set esckeys                     " allow usage of curs keys within insert mode
 
 syn on
 set encoding=utf-8
-set ai
 set background=dark
 set incsearch                   " Incremental search
 set hlsearch                    " hilight search
@@ -461,4 +460,17 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files && git submodule -q f
 
 
 "}}}
-"
+
+function! MyFoldText()
+    let nblines = v:foldend - v:foldstart + 1
+    let w = 78 - &foldcolumn - (&number ? 8 : 0)
+    let line = getline(v:foldstart)
+    let comment = substitute(line, '^\W\+\|{{{\d\=\|\W\+$', '', 'g')
+    let foldLevelStr = repeat("══", v:foldlevel - 1)
+    let expansionString = repeat("┈", w - 2- strwidth(nblines.comment.foldLevelStr))
+    let txt = foldLevelStr . '⇒ ' . comment . expansionString . nblines
+    let empty = repeat(" ", winwidth(0) - strwidth(txt))
+    let txt = txt . empty
+    return txt
+endfunction
+set foldtext=MyFoldText()
