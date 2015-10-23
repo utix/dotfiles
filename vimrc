@@ -26,7 +26,7 @@ au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
                                          " qui sont dans /tmp
 endif
 
-set listchars=eol:\ ,tab:\ \ ,trail:-,extends:>,precedes:<
+set listchars=tab:\ \ ,trail:-,extends:>,nbsp:█,precedes:<
 set list
 set virtualedit+=block
 set wildchar=<TAB>
@@ -314,7 +314,7 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Comment",      "none",       "5F5F8A",    "NONE")
     exec <SID>myhi("Folded",       "none",       "7C7CCB",    "NONE")
 
-    exec <SID>myhi("SpecialKey",   "none",       "dfdfdf",    "0f0f2f")
+    exec <SID>myhi("SpecialKey",   "none",       "696922",    "222269")
     exec <SID>myhi("Todo",         "underline",  "yellow",    "333333")
     exec <SID>myhi("Error",        "bold",       "white",     "red")
 
