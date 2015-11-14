@@ -121,6 +121,7 @@ map <kMinus> :cprev<CR>
 map <S-Right> :lnext<cr>
 " previous syntastic error
 map <S-Left> :lprev<cr>
+map \| :Tab/\|<cr>
 
 nnoremap \s ea<C-X><C-S>
 "map! <PageUp> 25<Up>
