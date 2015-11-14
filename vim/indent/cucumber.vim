@@ -45,9 +45,6 @@ function! GetCucumberIndent()
   elseif syn ==# 'cucumberExamples' || line =~# '^\s*\%(Examples\|Scenarios\):'
     " line after examples heading
     return 3 * &sw
-  elseif syn =~# '^cucumber\%(Background\|Scenario\|ScenarioOutline\)$' || line =~# '^\s*\%(Background\|Scenario\|Scenario Outline\):'
-    " line after background, scenario or outline heading
-    return 2 * &sw
   elseif cline =~# '^\s*[@#]' && (nsyn == 'cucumberFeature' || nline =~# '^\s*Feature:' || indent(prevnonblank(v:lnum-1)) <= 0)
     " tag or comment before a feature heading
     return 0
@@ -58,6 +55,15 @@ function! GetCucumberIndent()
     " mid-table
     " preserve indent
     return indent(prevnonblank(v:lnum-1))
+  elseif cline =~# '^\s*\%(Given\)'
+    return 2 * &sw
+  elseif cline =~# '^\s*\%(Then\|When\)'
+    return 2 * &sw + 1
+  elseif cline =~# '^\s*\%(And\|But\)'
+    return 2 * &sw + 2
+  elseif cline =~# '^\s*#'
+    " other comments
+    return 2 * &sw + 6
   elseif cline =~# '^\s*|' && line =~# '^\s*[^|]'
     " first line of a table, relative indent
     return indent(prevnonblank(v:lnum-1)) + &sw
