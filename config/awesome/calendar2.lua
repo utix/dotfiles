@@ -20,7 +20,9 @@ module("calendar2")
 
 local calendar = {}
 local current_day_format = "<u>%s</u>"
+local locales = {'America/Los_Angeles', 'Europe/Paris', 'Australia/Melbourne'  }
 local locale = 'Australia/Melbourne'
+local locale_pos = 3
 function displayMonth(month,year,weekStart)
         local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
         local d=os.date("*t",t)
@@ -40,7 +42,8 @@ function displayMonth(month,year,weekStart)
                 lines = lines .. "    "
                 writeLine = writeLine + 1
         end
-
+        local f = io_m.popen("TZ='"..locale.."' date +%Y-%m-%d")
+        local s = f:read('*line')
         for d=1,mthDays do
                 local x = d
                 local t = os.time{year=year,month=month,day=d}
@@ -48,7 +51,7 @@ function displayMonth(month,year,weekStart)
                         writeLine = 1
                         lines = lines .. "\n" .. os.date(" %V",t)
                 end
-                if os.date("%Y-%m-%d") == os.date("%Y-%m-%d", t) then
+                if s == os.date("%Y-%m-%d", t) then
                         x = string.format(current_day_format, d)
                 end
                 if (#(tostring(d)) == 1) then
@@ -95,11 +98,21 @@ function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
         switchNaughtyMonth(-1)
     end),
     awful.button({ }, 10, function()
-        locale = 'Europe/Paris'
+        if locale_pos < #locales then
+            locale_pos = locale_pos + 1
+        else
+            locale_pos = 1
+        end
+        locale = locales[locale_pos]
         switchNaughtyMonth(0)
     end),
     awful.button({ }, 11, function()
-        locale = 'Australia/Melbourne'
+        if locale_pos <= 1  then
+            locale_pos = #locales
+        else
+            locale_pos = locale_pos - 1
+        end
+        locale = locales[locale_pos]
         switchNaughtyMonth(0)
     end),
     awful.button({ }, 3, function()
