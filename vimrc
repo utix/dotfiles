@@ -101,6 +101,7 @@ map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
 " spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
+map <S-F5> z=<CR>
 map <F6> ma
 map <F7> `a
 map <F8> :w<cr>:SyntasticCheck<cr>
