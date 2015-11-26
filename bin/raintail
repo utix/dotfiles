@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rainbow --config=mcg_tracing -- tail -F $@
