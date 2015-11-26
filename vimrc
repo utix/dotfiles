@@ -101,7 +101,7 @@ map! <F3> <Esc> \be
 map <F4> :gr! -w <cword><cr>
 " spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
-map <S-F5> z=<CR>
+map <S-F5> z=
 map <F6> ma
 map <F7> `a
 map <F8> :w<cr>:SyntasticCheck<cr>
@@ -109,7 +109,7 @@ map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 "set makeprg=LC_ALL=C\ unbuffer\ make
-map <F11> :make P=debug NOCOMPRESS=1<cr>
+map <F11> :make<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 
 " next compilation error
@@ -437,6 +437,7 @@ let g:syntastic_cpp_no_include_search = 1
 let g:syntastic_cpp_no_default_include_dirs = 1
 
 let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_pylint_args = '--disable=line-too-long'
 
 let g:syntastic_php_checkers = ['php', 'phpmd', 'phpcs']
 " let :E :Explore (syntastic defines an Errors command which makes :E
