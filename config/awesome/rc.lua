@@ -160,6 +160,9 @@ tempcpuwidget:set_max_value(35);
 
 awful.hooks.timer.register(1, function ()
     local f = io.open('/sys/class/hwmon/hwmon1/device/fan2_input')
+    if f == nil then
+        return
+    end
     local v = f:read()
     f:close()
     fancpuwidget:add_value(v)
