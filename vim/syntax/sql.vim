@@ -163,8 +163,12 @@ syn keyword sqlTodo         contained DEBUG FIXME NOTE TODO WARN XXX
 
 " Comments
 syn region sqlComment       start="/\*"  end="\*/" contains=sqlTodo
-syn match  sqlComment       "--.*$" contains=sqlTodo
+syn match  sqlComment       "--.*$" contains=sqlTodo,liquidRollBack,liquidChangeSet
 syn match  sqlComment       "rem.*$" contains=sqlTodo
+syn match  liquidName       contained "[^:]\+" nextgroup=liquidId
+syn match  liquidId         contained  "\(:\)\@<=\d\+"
+syn region liquidRollBack   contained matchgroup=liquidKey start="rollback " end="$" contains=@sqlAll
+syn region liquidChangeSet  contained matchgroup=liquidKey start="changeset" end="$" contains=liquidName,liquidId skipwhite
 
 " Mark correct paren use. Different colors for different purposes.
 syn region  sqlParens       transparent matchgroup=sqlParen start="(" end=")"
@@ -236,6 +240,9 @@ if version >= 508 || !exists("did_sql_syn_inits")
     endif
 
     HiLink sqlComment       Comment
+    HiLink liquidKey        Structure
+    HiLink liquidId         Number
+    HiLink liquidName       Comment
     HiLink sqlError         Error
     HiLink sqlFunction      Function
     HiLink sqlUnknownFunc   Exception
