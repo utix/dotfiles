@@ -19,3 +19,6 @@
 [submodule "vim/bundle/tabular"]
 	path = vim/bundle/tabular
 	url = https://github.com/godlygeek/tabular.git
+[submodule "vim/bundle/vim-ansible-yaml"]
+	path = vim/bundle/vim-ansible-yaml
+	url = git://github.com/chase/vim-ansible-yaml.git
