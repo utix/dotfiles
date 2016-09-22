@@ -173,10 +173,12 @@ syn region  sqlParens       transparent matchgroup=sqlParenFunc start="\(\<\w\+\
 
 " Highlight types correctly inside create table and procedure statements.
 " All other SQL is properly highlighted as well.
+syn region  sqlTableName    matchgroup=sqlParen start="\(\(create\|drop\|alter\)\s\+table\s\+\)\@<=" end="\(\s\+\|(\|;\)\@="
 syn region  sqlTypeParens   contained matchgroup=sqlType start="(" end=")" contains=@sqlALL
 syn match   sqlTypeMatch    contained "\(\(^\|[,(]\)\s*\S\+\s\+\)\@<=\w\+\(\s*([^)]\+)\)\?" contains=sqlType,sqlTypeParens
 syn match   sqlTypeMatch    contained "\(\(^\|[,(]\)\s*\S\+\s\+\)\@<=character\s\+varying\s*([^)]\+)" contains=sqlType,sqlTypeParens
 syn region  sqlTypeRegion   matchgroup=sqlParen start="\(create\s\+table\s\+[^(]\+\s\+\)\@<=(" end=")" contains=@sqlALL,sqlTypeMatch
+syn region  sqlTypeRegion   start="\(alter\s\+table\s\+[^(]\+\s\+\(modify\|change\)\s\+\)\@<=" end=";" contains=@sqlALL,sqlTypeMatch,sqlType
 syn region  sqlTypeRegion   matchgroup=sqlParen start="\(create\s\+\(or\s\+replace\s\+\)\?procedure\s\+[^(]\+\s*\)\@<=(" end=")" contains=@sqlALL,sqlTypeMatch
 
 " SQL Embedded in a statement.
@@ -194,7 +196,7 @@ syn match   sqlAnyString    contained ".*" contains=sqlVariable
 syn region  sqlSetRegion    matchgroup=sqlStatement start="^\s*set\>" matchgroup=NONE end="$" contains=sqlSetOptions,sqlSetValues
 syn keyword sqlSetOptions   contained autorecovery colsep copytypecheck describe escchar flagger
 syn keyword sqlSetOptions   contained instance logsource long null recsep recsepchar
-syn keyword sqlSetOptions   contained 
+syn keyword sqlSetOptions   contained
 syn match   sqlSetOptions   contained "\<\(app\w*\|array\w*\|auto\w*\|autop\w*\)\>"
 syn match   sqlSetOptions   contained "\<\(autot\w*\|blo\w*\|cmds\w*\|con\w*\|copyc\w*\)\>"
 syn match   sqlSetOptions   contained "\<\(def\w*\|echo\|editf\w*\|emb\w*\|errorl\w*\|esc\w*\)\>"
@@ -241,7 +243,8 @@ if version >= 508 || !exists("did_sql_syn_inits")
     HiLink sqlConditional   Conditional
     HiLink sqlNumber        Number
     HiLink sqlOperator      Operator
-    HiLink sqlParen         Comment
+    HiLink sqlTableName     Function
+    HiLink sqlParen         Function
     HiLink sqlParenEmpty    Operator
     HiLink sqlParenFunc     Function
     HiLink sqlSpecial       Keyword
