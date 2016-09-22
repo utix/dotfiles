@@ -35,8 +35,8 @@ syn match   sqlError        ",\_\s*\(\<\(table\|using\|where\)\>\)\@="
 syn keyword sqlSpecial      false null true
 
 " Keywords
-syn keyword sqlKeyword      access add after aggregate as asc authorization
-syn keyword sqlKeyword      begin by cache cascade check cluster collate
+syn keyword sqlKeyword      access add after aggregate as asc authorization auto_increment
+syn keyword sqlKeyword      begin by cache cascade change check cluster collate
 syn keyword sqlKeyword      collation column compress conflict connect connection
 syn keyword sqlKeyword      constraint current cursor database debug decimal
 syn keyword sqlKeyword      default desc each else elsif escape exception
@@ -135,7 +135,7 @@ syn keyword sqlType         contained mediumint mediumtext mlslabel money
 syn keyword sqlType         contained multiset nchar number numeric nvarchar
 syn keyword sqlType         contained raw real rowid serial serial8 set
 syn keyword sqlType         contained smallfloat smallint text time
-syn keyword sqlType         contained timestamp tinyblob tinyint tinytext
+syn keyword sqlType         contained timestamp tinyblob tinyint tinytext unsigned
 syn keyword sqlType         contained varchar varchar2 varray year
 syn match   sqlType         contained "\<\(character\|double\|varying\)\>"
 syn match   sqlType         contained "\<character\s\+varying\>"
@@ -159,7 +159,7 @@ syn match sqlNumber         "-\=\<[0-9]*\.[0-9]*e[+-]\=[0-9]*\>"
 syn match sqlNumber         "\<0x[abcdef0-9]*\>"
 
 " Todo
-syn keyword sqlTodo         contained DEBUG FIXME NOTE TODO XXX
+syn keyword sqlTodo         contained DEBUG FIXME NOTE TODO WARN XXX
 
 " Comments
 syn region sqlComment       start="/\*"  end="\*/" contains=sqlTodo
