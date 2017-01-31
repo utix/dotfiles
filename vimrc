@@ -11,6 +11,7 @@ set ai
 set hidden                      " allow to cycle and hide modified buffers
 set viminfo='1000,/1000,:1000,<1000,@1000,n~/.viminfo
 set history=1000
+set re=1
 
 set tags=tags;/,.tags;/,TAGS;/
 exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n\" | tr \" \" \",\"")
@@ -104,12 +105,22 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 map <S-F5> z=
 map <F6> ma
 map <F7> `a
-map <F8> :w<cr>:SyntasticCheck<cr>
-map! <F8> <Esc> :w<cr>:SyntasticCheck<cr>
+map <F8> <Esc>
+ \<C-W>}o//TEMP MARKER<Esc>
+ \<C-W>P1G/public class<CR><Esc>yy<C-W>pG?import<CR><Esc>p<Esc>
+ \<C-W>P1G/package<CR><Esc>yy<C-W>pG?import<CR><Esc>p<Esc>
+ \$xa.<Esc>0jwwi<CR><Esc>kdd<Esc>
+ \wDx<Esc>kJxx<Esc>$a;<Esc>
+ \0cwimport<Esc>
+ \:update<CR><Esc>
+ \/TEMP MARKER<CR>dd<Esc>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 "set makeprg=LC_ALL=C\ unbuffer\ make
-map <F11> :make<cr>
+map <F11> :make package<cr>
+autocmd FileType java no <F11> :make clean install<cr>
+au FileType java compiler mvn
+au FileType pom compiler mvn
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 
 " next compilation error
@@ -353,7 +364,7 @@ if has("gui_running") || &t_Co >= 88
 
     exec <SID>myhi("StorageClass", "none",       "098209",    "NONE")
     exec <SID>myhi("Type",         "none",       "0eca0e",    "NONE")
-    exec <SID>myhi("Structure",    "none",       "098209",    "NONE")
+    exec <SID>myhi("Structure",    "none",       "055005" ,   "NONE")
     exec <SID>myhi("Directory",    "none",       "098209",    "NONE")
 
     exec <SID>myhi("Include",      "none",       "bf0fbf",    "NONE")
@@ -384,6 +395,8 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("pythonFunction",    "bold",  "3CB371",    "NONE")
     exec <SID>myhi("pythonOperator",    "none",  "3CB371",    "NONE")
     exec <SID>myhi("Exception",         "bold",  "FFFF33",    "NONE")
+    exec <SID>myhi("javaFuncDef",       "bold",  "3CB371",    "NONE")
+    exec <SID>myhi("javaBraces",       "bold",  "FFFF33",    "NONE")
 else
     hi Comment      cterm=none       ctermfg=blue       ctermbg=none
     hi Folded       cterm=none       ctermfg=brown      ctermbg=none
@@ -416,7 +429,7 @@ setl foldmethod=marker
 call pathogen#infect()
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
-                         \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript',  'cpp', 'c' ],
+                         \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'java', 'cpp', 'c' ],
                          \ 'active_filetypes': [ ] }
 let g:syntastic_ignore_files = ['^/usr/include/']
 let g:syntastic_auto_loc_list=1
@@ -437,7 +450,6 @@ let g:syntastic_cpp_no_include_search = 1
 let g:syntastic_cpp_no_default_include_dirs = 1
 
 let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_python_pylint_args = '--disable=line-too-long'
 
 let g:syntastic_php_checkers = ['php', 'phpmd', 'phpcs']
 " let :E :Explore (syntastic defines an Errors command which makes :E
