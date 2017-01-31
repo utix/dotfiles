@@ -22,3 +22,9 @@
 [submodule "vim/bundle/vim-ansible-yaml.new"]
 	path = vim/bundle/vim-ansible-yaml
 	url = git@github.com:plague-doctor/vim-ansible-yaml.git
+[submodule "vim/bundle/nerdtree"]
+	path = vim/bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "vim/bundle/maven-compiler.vim"]
+	path = vim/bundle/maven-compiler.vim
+	url = https://github.com/JalaiAmitahl/maven-compiler.vim
