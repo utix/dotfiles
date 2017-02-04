@@ -20,9 +20,9 @@ module("calendar2")
 
 local calendar = {}
 local current_day_format = "<u>%s</u>"
-local locales = {'America/Los_Angeles', 'Europe/Paris', 'Australia/Melbourne'  }
-local locale = 'Australia/Melbourne'
-local locale_pos = 3
+local locales = {'America/Los_Angeles', 'Europe/Paris', 'Australia/Melbourne', 'Asia/Shanghai'}
+local locale_pos = 4 -- Set China as current default
+local locale = locales[locale_pos]
 function displayMonth(month,year,weekStart)
         local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
         local d=os.date("*t",t)
@@ -83,7 +83,7 @@ function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
         local month, year = os.date('%m'), os.date('%Y')
         calendar = { month, year,
         naughty.notify({
-                text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(month, year, 2, 'Australia/Melbourne')),
+                text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(month, year, 2, locale)),
                 icon="/home/aurel/.config/awesome/themes/"..locale..".png",
                 timeout = 0,
                 hover_timeout = 0.5,
