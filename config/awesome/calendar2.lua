@@ -97,7 +97,7 @@ function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
     awful.button({ }, 1, function()
         switchNaughtyMonth(-1)
     end),
-    awful.button({ }, 10, function()
+    awful.button({'Control' }, 1, function()
         if locale_pos < #locales then
             locale_pos = locale_pos + 1
         else
@@ -106,7 +106,7 @@ function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
         locale = locales[locale_pos]
         switchNaughtyMonth(0)
     end),
-    awful.button({ }, 11, function()
+    awful.button({'Control' }, 2, function()
         if locale_pos <= 1  then
             locale_pos = #locales
         else

@@ -4,7 +4,7 @@
 
 theme = {}
 
-theme.font          = "sans 8"
+theme.font          = "sans 14"
 
 theme.bg_normal     = "#222222"
 theme.bg_focus      = "#535d6c"
@@ -40,7 +40,7 @@ theme.tasklist_floating_icon = "/usr/share/awesome/themes/default/tasklist/float
 -- menu_[border_color|border_width]
 theme.menu_submenu_icon = "/usr/share/awesome/themes/default/submenu.png"
 theme.menu_height   = "15"
-theme.menu_width    = "100"
+theme.menu_width    = "230"
 
 -- You can add as many variables as
 -- you wish and access them by using
