@@ -1,0 +1,77 @@
+Xft.dpi: 192
+
+/*
+ * maps ctrl + arrow to xterm bindings
+ */
+URxvt.keysym.Control-Up:  \033[1;5A
+URxvt.keysym.Control-Down:   \033[1;5B
+URxvt.keysym.Control-Left:   \033[1;5D
+URxvt.keysym.Control-Right:   \033[1;5C
+
+xterm*BorderWidth: 0
+xterm*BorderColor: white
+/* XTerm */
+xterm*font: -*-*-medium-r-*-*-18-*-*-*-*-*-iso10646-*
+
+*saveLines: 10000
+
+*charClass: 33:48,35:48,37-38:48,43-47:48,58:48,61:48,63-64:48,95:48,126:48
+/* 
+ * URxvt*letterSpace: -2
+ */
+URxvt.cutchars: "`\"'()*,;<>[]{|}"
+/*
+URxvt.font:	-*-terminal-*-r-*-*-14-*-*-*-*-*-iso8859-*
+URxvt.boldFont:	-*-terminal-*-r-*-*-14-*-*-*-*-*-iso8859-*
+URxvt.font:		xft:Monospace-9
+URxvt.boldFont:	xft:Monospace-9
+URxvt.font: xft:Inconsolata-g for Powerline:size=9
+URxvt.font: xft:Liberation Mono for Powerline:size=6
+*/
+URxvt.font: xft:Cousine for Powerline:size=6
+URxvt.boldFont:	xft:Cousine for Powerline:style=Bold:size=6
+
+
+URxvt.color0: rgb:0/0/0
+URxvt.color1: rgb:b2/18/18
+URxvt.color2: rgb:18/b2/18
+URxvt.color3: rgb:b2/68/18
+URxvt.color4: rgb:30/30/b0
+URxvt.color5: rgb:b2/18/b2
+URxvt.color6: rgb:18/b2/b2
+URxvt.color7: rgb:b2/b2/b2
+URxvt.color8: rgb:68/68/68
+URxvt.color9: rgb:ff/54/54
+URxvt.color10: rgb:54/ff/54
+URxvt.color11: rgb:ff/ff/54
+URxvt.color12: rgb:5c/80/ff
+URxvt.color13: rgb:ff/54/ff
+URxvt.color14: rgb:54/ff/ff
+URxvt.color15: rgb:ff/ff/ff
+URxvt.foreground: rgb:bb/bb/bb
+URxvt.background: black
+URxvt.colorBD: white
+URxvt.intensityStyles: true
+!
+! borders
+!
+! pixels for external border
+URxvt.externalBorder:     0
+! pixels for internal border
+URxvt.internalBorder:     3
+! remove border
+URxvt.borderLess:         false
+URxvt.borderColor: black
+URxvt.perl-ext: default
+URxvt.fading:  10
+
+URxvt.reverseVideo: false
+URxvt.scrollstyle: plain
+URxvt.scrollBar: false
+URxvt.scrollTtyOutput: false
+URxvt.scrollWithBuffer: false
+URxvt.scrollTtyKeypress: true
+URxvt.insecure: true
+URxvt.meta8: false
+URxvt.mouseWheelScrollPage: false
+URrxvt.visualBell: true
