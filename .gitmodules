@@ -28,3 +28,6 @@
 [submodule "vim/bundle/maven-compiler.vim"]
 	path = vim/bundle/maven-compiler.vim
 	url = https://github.com/JalaiAmitahl/maven-compiler.vim
+[submodule "vim/bundle/vim-signature"]
+	path = vim/bundle/vim-signature
+	url = git@github.com:kshenoy/vim-signature.git
