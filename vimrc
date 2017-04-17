@@ -105,22 +105,17 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 map <S-F5> z=
 map <F6> ma
 map <F7> `a
-map <F8> <Esc>
- \<C-W>}o//TEMP MARKER<Esc>
- \<C-W>P1G/public class<CR><Esc>yy<C-W>pG?import<CR><Esc>p<Esc>
- \<C-W>P1G/package<CR><Esc>yy<C-W>pG?import<CR><Esc>p<Esc>
- \$xa.<Esc>0jwwi<CR><Esc>kdd<Esc>
- \wDx<Esc>kJxx<Esc>$a;<Esc>
- \0cwimport<Esc>
- \:update<CR><Esc>
- \/TEMP MARKER<CR>dd<Esc>
+map <F8> :JavaImport<CR>
+map <S-F8> :JavaImportOrganize<CR>
+map [32~ :JavaImportOrganize<CR>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 "set makeprg=LC_ALL=C\ unbuffer\ make
 map <F11> :make package<cr>
 autocmd FileType java no <F11> :make clean install<cr>
-au FileType java compiler mvn
-au FileType pom compiler mvn
+autocmd FileType java no <F2> :JavaSearch<cr>
+au FileType java set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
+au FileType pom  set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 
 " next compilation error
