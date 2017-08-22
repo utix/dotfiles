@@ -1,0 +1,42 @@
+#!/bin/zsh
+
+autoload zmv
+alias mmv='noglob zmv -W'
+
+if test -n "$XAUTHORITY"; then
+    alias su='sudo -E -s'
+else
+    alias su='export XAUTHORITY=${HOME}/.Xauthority ; sudo -E -s'
+    alias sudo='export XAUTHORITY=${HOME}/.Xauthority ; sudo -E'
+fi
+
+alias du="du -hcs"
+alias df="df -h"
+
+case "${$(ls --version | head -1)##* }" in
+    [0-5].*)
+        alias ls="ls -bCF --color=auto"
+        ;;
+    *)
+        alias ls="ls --group-directories-first -bCF --color=auto"
+        ;;
+esac
+
+alias la="ls --color=always -a"
+alias ll="ls --color=always -lah"
+alias lla="ls --color=always -la"
+alias lal="ls --color=always -la"
+
+alias egrep='egrep --color=tty -d skip'
+alias fgrep='fgrep --color=tty -d skip'
+alias grep='grep --color=tty -d skip'
+
+alias md='mkdir'
+alias rd='rmdir'
+alias rm='rm'
+
+alias v=vim
+cvi () {
+    vim -O ${${1%.[hc]}%.}.{h,c}
+}
+alias mvn="rainbow --config=mvn3 -- mvn"

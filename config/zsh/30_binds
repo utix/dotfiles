@@ -1,0 +1,27 @@
+#! /bin/zsh
+
+zmodload -i zsh/complist
+
+bindkey "^[[3~" delete-char
+bindkey "^[[5~" backward-word
+bindkey "^[[6~" forward-word
+
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+
+bindkey "^A" beginning-of-line
+bindkey "^[[7~" beginning-of-line
+bindkey "^E" end-of-line
+bindkey "[8~" end-of-line
+bindkey "^K" kill-line
+bindkey "^L" clear-screen
+bindkey "^R" history-incremental-search-backward
+bindkey "^U" kill-whole-line
+bindkey "^V" quoted-insert
+bindkey "^W" backward-kill-word
+
+bindkey -M menuselect "h" backward-char
+bindkey -M menuselect "j" down-line-or-history
+bindkey -M menuselect "k" up-line-or-history
+bindkey -M menuselect "l" forward-char
+bindkey -M menuselect "u" undo

@@ -1,0 +1,137 @@
+#! /bin/zsh
+
+autoload colors && colors
+
+
+setopt extended_glob
+
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$reset_color%}%{$fg[green]%}▲"
+ZSH_THEME_GIT_PROMPT_BEHIND="%{$reset_color%}%{$fg_bold[magenta]%}▼"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$reset_color%}%F{green}✚"
+ZSH_THEME_GIT_PROMPT_DIVERGED="%{$reset_color%}%{$fg_bold[red]%}✗"
+ZSH_THEME_GIT_PROMPT_STAGED="%{$reset_color%}%{$fg_bold[green]%}⚑"
+ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$reset_color%}%{$fg_bold[yellow]%}⚑"
+
+
+
+#
+# Will put into psvar git information
+# 1: branch
+# 2: status
+# 3: State error level
+# 4: state warning level
+# 5: state ok level
+#
+#
+function precmd {
+    local git_dir branch extra _INDEX _STATUS
+
+    local TERMWIDTH
+        (( TERMWIDTH = ${COLUMNS} - 1 ))
+    FOO="${(l.(($TERMWIDTH - 20))..─.)}"
+    psvar=()
+    if test -d "$VIRTUAL_ENV"; then
+        psvar[1]="($(basename $VIRTUAL_ENV))"
+    fi
+    git_dir=$(git rev-parse --git-dir 2>/dev/null) || return
+    extra=""
+    if test -d "$git_dir/rebase-apply"; then
+        if test -f "$git_dir/rebase-apply/rebasing"; then
+            psvar[4]="rebase"
+        elif test -f "$git_dir/rebase-apply/applying"; then
+            psvar[4]="am"
+        else
+            psvar[4]="am/rebase"
+        fi
+        branch="$(git symbolic-ref HEAD 2>/dev/null)"
+    elif test -f "$git_dir/rebase-merge/interactive"; then
+        psvar[4]="rebase -i"
+        branch="$(cat "$git_dir/rebase-merge/head-name")"
+    elif test -d "$git_dir/rebase-merge"; then
+        psvar[4]="rebase -m"
+        branch="$(cat "$git_dir/rebase-merge/head-name")"
+    elif test -f "$git_dir/MERGE_HEAD"; then
+        psvar[4]="merge"
+        branch="$(git symbolic-ref HEAD 2>/dev/null)"
+    else
+        branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+            branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
+            branch="$(cut -c1-7 "$git_dir/HEAD")..."
+        if test -f "$git_dir/BISECT_LOG"; then
+            psvar[4]="bisect"
+        else
+            _INDEX=$(command git status --porcelain -b 2> /dev/null)
+            if [[ -n "$_INDEX" ]]; then
+                if $(echo "$_INDEX" | command grep -q '^[AMRD]. '); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_STAGED"
+                fi
+                if $(echo "$_INDEX" | command grep -q '^.[MTD] '); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNSTAGED"
+                fi
+                if $(echo "$_INDEX" | command grep -q -E '^\?\? '); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNTRACKED"
+                fi
+                if $(echo "$_INDEX" | command grep -q '^UU '); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNMERGED"
+                fi
+                if $(echo "$_INDEX" | command grep -q '^## .*ahead'); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_AHEAD"
+                fi
+                if $(echo "$_INDEX" | command grep -q '^## .*behind'); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_BEHIND"
+                fi
+                if $(echo "$_INDEX" | command grep -q '^## .*diverged'); then
+                    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_DIVERGED"
+                fi
+            else
+                _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_CLEAN"
+            fi
+        fi
+    fi
+
+
+    psvar[2]="${branch#refs/heads/}"
+    psvar[3]=$_STATUS
+}
+
+
+_my_prompt_setup() {
+        setopt prompt_subst
+
+    local rst  main  hour  user path cursor
+    local -a pcc
+
+    rst="%{$reset_color%}"
+    main="%{$reset_color$fg_bold[blue]%}"
+    hour="%{$reset_color$fg_bold[grey]%}"
+    path="%{$reset_color$fg_bold[cyan]%}"
+    gitpath="%{$reset_color$fg_bold[red]%}"
+    gitoperation="%{$reset_color$fg_bold[red]%}"
+    cursor="%{$reset_color$fg_no_bold[yellow]%}"
+    venv="%{$reset_color$fg_no_bold[yellow]%}"
+    git="\$psvar[3]"
+    PROMPT="\
+$main╭($hour%T$main)─%(2v.${gitpath}[%2v]%(4v.$gitoperation%4v.%(3v.$git .)).)$main─{$path%~$main}──%{$FOO%}
+$main╰┤%{%(?..%S)%}%m%s$cursor ▶$rst "
+    RPROMPT="$venv %1v$rst"
+    POSTEDIT=$reset_color
+}
+
+if [ $UID -eq 0 ]; then
+    PROMPT="%{$reset_color$fg_bold[yellow]%}[%{$fg_bold[red]%}%{%(?..%S)%}%n %m %s%{$fg_bold[yellow]%}%{$reset_color%} "
+    RPROMPT="%{$reset_color$fg_bold[yellow]%}(%{$fg_bold[red]%}%~%{$fg_bold[yellow]%})%{$reset_color%} "
+else
+    _my_prompt_setup
+fi
+
+case "$TERM" in
+    xterm|rxvt-unicode)
+        PROMPT="${PROMPT}%{]2;zsh%}"
+
+        preexec () {
+            local CMD=${1[(wr)^(*=*|sudo|exec|-*)]}
+            echo -ne "\e]2;$CMD\007"
+        }
+    ;;
+    *);;
+esac
