@@ -26,9 +26,6 @@ ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$reset_color%}%{$fg_bold[yellow]%}⚑"
 function precmd {
     local git_dir branch extra _INDEX _STATUS
 
-    local TERMWIDTH
-        (( TERMWIDTH = ${COLUMNS} - 1 ))
-    FOO="${(l.(($TERMWIDTH - 20))..─.)}"
     psvar=()
     if test -d "$VIRTUAL_ENV"; then
         psvar[1]="($(basename $VIRTUAL_ENV))"
@@ -111,7 +108,7 @@ _my_prompt_setup() {
     venv="%{$reset_color$fg_no_bold[yellow]%}"
     git="\$psvar[3]"
     PROMPT="\
-$main╭($hour%T$main)─%(2v.${gitpath}[%2v]%(4v.$gitoperation%4v.%(3v.$git .)).)$main─{$path%~$main}──%{$FOO%}
+$main╭($hour%T$main)─%(2v.${gitpath}[%2v]%(4v.$gitoperation%4v.%(3v.$git .)).)$main─{$path%~$main}──
 $main╰┤%{%(?..%S)%}%m%s$cursor ▶$rst "
     RPROMPT="$venv %1v$rst"
     POSTEDIT=$reset_color
@@ -135,3 +132,26 @@ case "$TERM" in
     ;;
     *);;
 esac
+vim_ins_mode="%{$fg[white]%}%{$fg_bold[blue]$bg[white]%} INSERT %{$reset_color%}"
+vim_cmd_mode="%{$fg[green]%}%{$fg_bold[black]$bg[green]%} COMMAND %{$reset_color%}"
+vim_mode=$vim_ins_mode
+function zle-line-init zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] ||
+         [[ $1 = 'block' ]]; then
+          psvar[1]=$psvar[1]"--CMD--"
+
+    elif [[ ${KEYMAP} == main ]] ||
+           [[ ${KEYMAP} == viins ]] ||
+           [[ ${KEYMAP} = '' ]] ||
+           [[ $1 = 'beam' ]]; then
+      if test -d "$VIRTUAL_ENV"; then
+          psvar[1]="($(basename $VIRTUAL_ENV))"
+      else
+          psvar[1]=""
+      fi
+    fi
+
+    zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
