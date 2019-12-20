@@ -20,7 +20,7 @@ local weather_widget = require("awesome-wm-widgets.weather-widget.weather")
 beautiful.tooltip_fg = beautiful.fg_normal
 beautiful.tooltip_bg = beautiful.bg_normal
 local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
-local sound_widget   = require("awesome-wm-widgets.volume-widget.volume")
+local volume_widget   = require("awesome-wm-widgets.volume-widget.volume")
 local mic_widget   = require("awesome-wm-widgets.mic-widget.mic")
 local ssh_widget = require("sshagent")
 -- Load Debian menu entries
@@ -134,14 +134,6 @@ mytextclock = wibox.widget.textclock()
 local calendar2 = require('calendar2')
 calendar2.addCalendarToWidget(mytextclock, io, "<span color=\"yellow\"><b>%s</b></span>")
 -- Initialize widget
--- Graph properties
---cpuwidget:set_width(150)
---cpuwidget:set_background_color("#494B4F")
---cpuwidget:set_color("#FF5656")
---cpuwidget:set_gradient_angle(0)
---cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
---vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
-
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
                     awful.button({ }, 1, function(t) t:view_only() end),
@@ -263,10 +255,15 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             --mykeyboardlayout,
-            cpuwidget,
+            cpuwidget({
+                width = 150,
+                step_spacing = 0,
+                color = "#AECF96"
+                --color = "linear:0,0:0,22:0,#FF5656:0.3,#88A175:0.5,#AECF96"
+            }),
             netwidget,
             netwidget2,
-            ramwidget,
+            ramwidget(),
         },
     }
     -- Create the wibox
@@ -286,13 +283,23 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             --mykeyboardlayout,
             ssh_widget,
-            battery_widget,
-            sound_widget,
+            battery_widget({
+                notification= true,
+                show_current_level=true,
+                margin_right=5
+            }),
+            volume_widget({
+                notification= true
+            }),
             spacer,
             mic_widget,
             spacer,
             mytextclock,
-            weather_widget,
+            weather_widget({
+                api_key = '542ffd081e67f4512b705f89d2a611b2',
+                city = 'Bordeaux,fr',
+                units = 'metric',
+            }),
             s.mylayoutbox,
         },
     }
@@ -310,6 +317,18 @@ root.buttons(gears.table.join(
     awful.button({modkey}, 11, awful.tag.viewprev)
 ))
 -- }}}
+-- the name of your main screen as shown in xrandr
+main_screen = "eDP-1"
+
+-- Helper function to conf a screen
+function conf_screen(screen, pos)
+   if screen == nil then cmd = "xrandr --auto"
+   else
+      cmd = "xrandr --output " .. screen .. " --auto  --" .. pos .. " " .. main_screen
+   end
+   awful.spawn(cmd)
+end
+
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
@@ -435,6 +454,52 @@ globalkeys = gears.table.join(
     end,
     {description = '-5%', group = 'hotkeys'}
   ),
+  awful.key({}, "XF86Display",
+  function ()
+      -- Command to get list of other screens and best mode
+      -- hack to handle when monitors mode are not sorted, like my TV does.
+      local get_screens = "xrandr | awk '/ connected/{screen=$1;a=1;next}/connected/{a=0}a{print screen \" \" $1}' | sort -k2n | tac | sort -u -k1,1 | grep -v " .. main_screen
+      awful.spawn.easy_async_with_shell(get_screens,
+      function(stdout, stderr, reason, exit_code)
+
+          -- Process the results
+          screens = {}
+          for i in stdout:gmatch("[^\r\n]+") do
+              a, b = i:match("(%S+) (%S+)")
+              table.insert(screens, {a, b})
+          end
+
+          -- If no screens, reset conf
+          if #screens == 0 then conf_screen(); return end
+
+          -- For each screens, ask position
+          local idx = 1
+          local notif = naughty.notify { text = "Position for " .. screens[idx][1] }
+          local grabber
+          grabber = awful.keygrabber.run(function(mod, key, event)
+              if event == "release" then return end
+
+              if key == "XF86Display" then conf_screen(screens[idx][1], "same-as")
+              elseif key == 'Up'      then conf_screen(screens[idx][1], "above")
+              elseif key == 'Down'    then conf_screen(screens[idx][1], "below")
+              elseif key == 'Right'   then conf_screen(screens[idx][1], "right-of")
+              elseif key == 'Left'    then conf_screen(screens[idx][1], "left-of")
+              else return
+              end
+
+              if idx < #screens then
+                  idx = idx + 1
+                  naughty.destroy(notif)
+                  notif = naughty.notify { text = "Position for " .. screens[idx][1] }
+              else
+                  naughty.destroy(notif)
+                  awful.keygrabber.stop(grabber)
+              end
+          end)
+      end)
+  end,
+  {description = "Display management auto", group = "function keys"}),
+
   -- ALSA volume control
   awful.key(
     {},
@@ -472,7 +537,7 @@ globalkeys = gears.table.join(
     {},
     'XF86PowerDown',
     function()
-      awful.spawn("xscreensaver_command -activate")
+      awful.spawn("gnome-screensaver-command -l")
     end,
     {description = 'lock the screen', group = 'hotkeys'}
   ),
@@ -480,9 +545,9 @@ globalkeys = gears.table.join(
     {modkey},
     'l',
     function()
-      awful.spawn("xscreensaver-command -activate")
+      awful.spawn("gnome-screensaver-command -l")
     end,
-    {description = 'toggle mute', group = 'hotkeys'}
+    {description = 'lock the screen', group = 'hotkeys'}
   ),
   awful.key(
     {},
@@ -522,13 +587,13 @@ clientkeys = gears.table.join(
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
-              {description = "toggle floating", group = "client"}),
+              {description = "toggle floating ✈️", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
-              {description = "toggle keep on top", group = "client"}),
+              {description = "toggle keep on top (^)", group = "client"}),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -541,7 +606,7 @@ clientkeys = gears.table.join(
             c.maximized = not c.maximized
             c:raise()
         end ,
-        {description = "(un)maximize", group = "client"}),
+        {description = "(un)maximize (+)", group = "client"}),
     awful.key({ modkey, "Control" }, "m",
         function (c)
             c.maximized_vertical = not c.maximized_vertical
@@ -759,5 +824,5 @@ awful.spawn('parcellite')
 awful.spawn('xinput set-prop 11 288 1')
 -- Remove middle click on the touchpad
 awful.spawn('xinput set-button-map 11 1 0 3 4 5 6 7')
-awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
+-- awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
