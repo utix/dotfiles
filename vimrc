@@ -332,8 +332,8 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("Cursor",       "reverse",    "dfdfdf",    "black")
 "   exec <SID>myhi("CursorLine",   "none",       "NONE",      "111111")
     exec <SID>myhi("Visual",       "none",       "NONE",      "333333")
-    exec <SID>myhi("IncSearch",    "none",       "black",     "yellow")
-    exec <SID>myhi("Search",       "none",       "black",     "yellow")
+    exec <SID>myhi("IncSearch",    "underline",  "yellow",    "darkblue")
+    exec <SID>myhi("Search",       "none",       "grey",      "darkblue")
 
     exec <SID>myhi("StatusLine",   "none",       "yellow",    "333333")
     exec <SID>myhi("StatusLineNc", "none",       "dfdfdf",    "1c1c1c")
@@ -359,7 +359,7 @@ if has("gui_running") || &t_Co >= 88
 
     exec <SID>myhi("StorageClass", "none",       "098209",    "NONE")
     exec <SID>myhi("Type",         "none",       "0eca0e",    "NONE")
-    exec <SID>myhi("Structure",    "none",       "055005" ,   "NONE")
+    exec <SID>myhi("Structure",    "none",       "darkgreen", "NONE")
     exec <SID>myhi("Directory",    "none",       "098209",    "NONE")
 
     exec <SID>myhi("Include",      "none",       "bf0fbf",    "NONE")
@@ -368,7 +368,7 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("SpecialChar",  "none",       "bf0fbf",    "NONE")
 
     exec <SID>myhi("Character",    "none",       "bf0f0f",    "NONE")
-    exec <SID>myhi("String",       "none",       "FF7585",    "NONE")
+    exec <SID>myhi("String",       "none",       "magenta",   "NONE")
     exec <SID>myhi("Constant",     "none",       "bf0f0f",    "NONE")
 
     " diff
@@ -379,8 +379,8 @@ if has("gui_running") || &t_Co >= 88
 
     " C
     exec <SID>myhi("cFunction",    "bold",       "75FFFD",    "NONE")
-    exec <SID>myhi("cString",      "bold",       "FF7585" ,   "NONE")
-    exec <SID>myhi("cStructure",   "none",       "055005" ,   "NONE")
+    exec <SID>myhi("cString",      "none",       "magenta" ,  "NONE")
+    exec <SID>myhi("cStructure",   "none",       "darkgreen", "NONE")
     exec <SID>myhi("ColorColumn",  "bold",       "NONE",      "202020")
     exec <SID>myhi("Label",        "none",       "FFFF00",    "NONE")
     exec <SID>myhi("OverLength",   "none",       "NONE",      "592929")
