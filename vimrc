@@ -51,11 +51,12 @@ let loaded_matchparen = 1
 filetype plugin indent on
 
 au FileType php  set et sts=4 sw=4
+au FileType python  set et sts=4 sw=4
 au FileType html set et sts=4 sw=4 syntax=php
 au FileType java set et sts=4 sw=4
 au FileType c set et sts=4 sw=4
 au FileType cpp set et sts=4 sw=4
-au FileType javascript set et sts=4 sw=4
+au FileType javascript set et sts=2 sw=2
 au FileType html,xhtml,xml setlocal sw=2 syntax=smarty
 au FileType css  set et sts=4 sw=4
 au FileType sql  set et sts=4 sw=4
