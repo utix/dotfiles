@@ -38,10 +38,11 @@ naughty.config.defaults['icon_size'] = 100
 --theme_path = "/home/aurel/.config/awesome/themes/theme.lua"
 theme_path = gears.filesystem.get_themes_dir() .. "default/theme.lua"
 beautiful.init(theme_path)
+beautiful.font = "DejaVu Sans 10"
 
 -- This is used later as the default terminal and editor to run.
--- terminal = "rxvt"
-terminal = "terminator"
+terminal = "rxvt"
+-- terminal = "terminator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -255,19 +256,19 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             --mykeyboardlayout,
+            netwidget,
+            netwidget2,
             cpuwidget({
                 width = 150,
                 step_spacing = 0,
                 color = "#AECF96"
                 --color = "linear:0,0:0,22:0,#FF5656:0.3,#88A175:0.5,#AECF96"
             }),
-            netwidget,
-            netwidget2,
             ramwidget(),
         },
     }
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
+    s.mywibox = awful.wibar({ position = "top", screen = s; height=24 })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -288,9 +289,7 @@ awful.screen.connect_for_each_screen(function(s)
                 show_current_level=true,
                 margin_right=5
             }),
-            volume_widget({
-                notification= true
-            }),
+            volume_widget({notification = true}),
             spacer,
             mic_widget,
             spacer,
@@ -504,25 +503,19 @@ globalkeys = gears.table.join(
   awful.key(
     {},
     'XF86AudioRaiseVolume',
-    function()
-      awful.spawn('amixer -D pulse sset Master 5%+')
-    end,
+    volume_widget.raise,
     {description = 'volume up', group = 'hotkeys'}
   ),
   awful.key(
     {},
     'XF86AudioLowerVolume',
-    function()
-      awful.spawn('amixer -D pulse sset Master 5%-')
-    end,
+    volume_widget.lower,
     {description = 'volume down', group = 'hotkeys'}
   ),
   awful.key(
     {},
     'XF86AudioMute',
-    function()
-      awful.spawn('amixer -D pulse set Master 1+ toggle')
-    end,
+    volume_widget.toggle,
     {description = 'toggle mute', group = 'hotkeys'}
   ),
   awful.key(
@@ -821,8 +814,9 @@ awful.spawn('nm-applet')
 awful.spawn('slack')
 awful.spawn('parcellite')
 -- Reverse scroll for touchpad
-awful.spawn('xinput set-prop 11 288 1')
+-- xinput list-props to find the values
+awful.spawn('xinput set-prop 10 314 0')
 -- Remove middle click on the touchpad
-awful.spawn('xinput set-button-map 11 1 0 3 4 5 6 7')
+awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
 -- awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
