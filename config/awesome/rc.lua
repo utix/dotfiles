@@ -321,9 +321,14 @@ main_screen = "eDP-1"
 
 -- Helper function to conf a screen
 function conf_screen(screen, pos)
-   if screen == nil then cmd = "xrandr --auto"
+   if screen == nil then
+       cmd = "xrandr --auto"
    else
-      cmd = "xrandr --output " .. screen .. " --auto  --" .. pos .. " " .. main_screen
+       if pos == nil then
+           cmd = "xrandr --output " .. screen ..  " --off --output ".. main_screen .. " --auto"
+       else
+           cmd = "xrandr --output " .. screen .. " --auto  --" .. pos .. " " .. main_screen
+       end
    end
    awful.spawn(cmd)
 end
@@ -483,6 +488,7 @@ globalkeys = gears.table.join(
               elseif key == 'Down'    then conf_screen(screens[idx][1], "below")
               elseif key == 'Right'   then conf_screen(screens[idx][1], "right-of")
               elseif key == 'Left'    then conf_screen(screens[idx][1], "left-of")
+              elseif key == 'Delete'  then conf_screen(screens[idx][1])
               else return
               end
 
@@ -805,7 +811,9 @@ client.connect_signal("focus", function(c)
 end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
-    c.opacity = 0.9
+    if c.class == "URxvt" then
+        c.opacity = 0.8
+    end
 end)
 -- }}}
 --awful.spawn('gnome-panel')
