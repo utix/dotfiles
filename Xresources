@@ -82,47 +82,36 @@ URxvt.font: xft:Cousine for Powerline:size=9
 URxvt.boldFont:	xft:Cousine for Powerline:style=Bold:size=9
 
 URxvt.color0: rgb:0/0/0
-/* dark red */
+! dark red
 URxvt.color1: rgb:b2/18/18
-/* green */
+! green
 URxvt.color2: rgb:3c/b3/71
-/* marron */
-/*
-URxvt.color3: rgb:b2/68/18
-*/
-
-URxvt.color3: rgb:ff/7e/47
-/* blue */
+! marron
+URxvt.color3: #bf7f00
+! blue
 URxvt.color4: rgb:30/30/b0
-/*light grey */
-URxvt.color7: rgb:b2/b2/b2
-/*dark grey */
-URxvt.color8: rgb:68/68/68
-/* corail */
-URxvt.color9: rgb:ff/54/54
-/* light green */
-URxvt.color10: rgb:54/ff/54
-/* light yellow */
-URxvt.color11: rgb:ff/ff/54
-/* blue */
-URxvt.color12: rgb:5c/80/ff
-/* white */
-URxvt.color15: rgb:ff/ff/ff
-/*
 ! Magenta
-URxvt.color5: rgb:b2/18/b2
-URxvt.color13: rgb:ff/54/ff
-*/
+URxvt.color5:    #bf0fbf
 ! Cyan
-/*
-URxvt.color6: rgb:18/b2/b2
-URxvt.color14: rgb:54/ff/ff
-*/
 URxvt.color6:      #89d1ec
-URxvt.color14:     #1cfafe
-! Magenta
-URxvt.color5:      rgb:94/4d/95
+!light grey
+URxvt.color7: rgb:b2/b2/b2
+!dark grey
+URxvt.color8: rgb:68/68/68
+! red
+URxvt.color9: rgb:ff/54/54
+! light green
+URxvt.color10: rgb:54/ff/54
+! light yellow
+URxvt.color11: rgb:ff/ff/54
+! light blue
+URxvt.color12: rgb:5c/80/ff
+! light Magenta
 URxvt.color13:     rgb:e7/56/99
+! light Cyan
+URxvt.color14:     #1cfafe
+! white
+URxvt.color15: rgb:ff/ff/ff
 URxvt.foreground: rgb:bb/bb/bb
 URxvt.background: black
 URxvt.colorBD: white
