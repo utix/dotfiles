@@ -21,6 +21,7 @@ URxvt.keysym.Home: \033[7~
 URxvt.keysym.End: \033[8~
 URxvt.keysym.KP_Home: \033[7~
 URxvt.keysym.KP_End:  \033[8~
+URxvt.keysym.Shift-F5: \033[15;2~
 
 xterm*BorderWidth: 0
 xterm*BorderColor: white
