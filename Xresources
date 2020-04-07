@@ -81,38 +81,39 @@ URxvt.font: xft:Liberation Mono for Powerline:size=6
 URxvt.font: xft:Cousine for Powerline:size=9
 URxvt.boldFont:	xft:Cousine for Powerline:style=Bold:size=9
 
-URxvt.color0: rgb:0/0/0
+
+URxvt.color0: #000
 ! dark red
-URxvt.color1: rgb:b2/18/18
+URxvt.color1: #b21818
 ! green
-URxvt.color2: rgb:3c/b3/71
+URxvt.color2: #3cb371
 ! marron
 URxvt.color3: #bf7f00
 ! blue
-URxvt.color4: rgb:30/30/b0
+URxvt.color4: #3030b0
 ! Magenta
-URxvt.color5:    #bf0fbf
+URxvt.color5: #bf0fbf
 ! Cyan
-URxvt.color6:      #89d1ec
+URxvt.color6: #89d1ec
 !light grey
-URxvt.color7: rgb:b2/b2/b2
+URxvt.color7: #b2b2b2
 !dark grey
-URxvt.color8: rgb:68/68/68
+URxvt.color8: #686868
 ! red
-URxvt.color9: rgb:ff/54/54
+URxvt.color9: #ff5454
 ! light green
-URxvt.color10: rgb:54/ff/54
+URxvt.color10: #54ff54
 ! light yellow
-URxvt.color11: rgb:ff/ff/54
+URxvt.color11: #ffff54
 ! light blue
-URxvt.color12: rgb:5c/80/ff
+URxvt.color12: #5c80ff
 ! light Magenta
-URxvt.color13:     rgb:e7/56/99
+URxvt.color13: #e75699
 ! light Cyan
-URxvt.color14:     #1cfafe
+URxvt.color14: #1cfafe
 ! white
-URxvt.color15: rgb:ff/ff/ff
-URxvt.foreground: rgb:bb/bb/bb
+URxvt.color15: #ffffff
+URxvt.foreground: #bbbbbb
 URxvt.background: #070A21
 URxvt.colorBD: white
 URxvt.intensityStyles: true
