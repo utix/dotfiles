@@ -22,6 +22,7 @@ case "${$(ls --version | head -1)##* }" in
         ;;
 esac
 
+alias l="ls"
 alias la="ls --color=always -a"
 alias ll="ls --color=always -lah"
 alias lla="ls --color=always -la"
@@ -30,7 +31,7 @@ alias lal="ls --color=always -la"
 alias egrep='egrep --color=tty -d skip'
 alias fgrep='fgrep --color=tty -d skip'
 alias grep='grep --color=tty -d skip'
-
+alias ssh-add='ssh-add -t 43200 -c'
 alias md='mkdir'
 alias rd='rmdir'
 alias rm='rm'

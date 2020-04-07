@@ -6,11 +6,10 @@ bindkey "^[[3~" delete-char
 bindkey "^[[5~" backward-word
 bindkey "^[[6~" forward-word
 
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
-
 bindkey "^A" beginning-of-line
 bindkey "^[[7~" beginning-of-line
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
 bindkey "^E" end-of-line
 bindkey "[8~" end-of-line
 bindkey "^K" kill-line
