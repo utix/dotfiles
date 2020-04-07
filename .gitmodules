@@ -31,3 +31,6 @@
 [submodule "vim/bundle/vim-signature"]
 	path = vim/bundle/vim-signature
 	url = git@github.com:kshenoy/vim-signature.git
+[submodule "vim/bundle/vim-linux-coding-style"]
+	path = vim/bundle/vim-linux-coding-style
+	url = git@github.com:utix/vim-linux-coding-style.git
