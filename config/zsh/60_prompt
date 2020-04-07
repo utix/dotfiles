@@ -100,11 +100,11 @@ _my_prompt_setup() {
 
     rst="%{$reset_color%}"
     main="%{$reset_color$fg_bold[blue]%}"
-    hour="%{$reset_color$fg_bold[grey]%}"
+    hour="%{$reset_color$fg_bold[yellow]%}"
     path="%{$reset_color$fg_bold[cyan]%}"
     gitpath="%{$reset_color$fg_bold[red]%}"
     gitoperation="%{$reset_color$fg_bold[red]%}"
-    cursor="%{$reset_color$fg_no_bold[yellow]%}"
+    cursor="%{$reset_color$fg_bold[red]%}"
     venv="%{$reset_color$fg_no_bold[yellow]%}"
     git="\$psvar[3]"
     PROMPT="\
@@ -151,6 +151,7 @@ function zle-line-init zle-keymap-select {
       fi
     fi
 
+    echo -ne "\e[3 q"
     zle reset-prompt
 }
 zle -N zle-line-init

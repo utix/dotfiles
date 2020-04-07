@@ -113,7 +113,7 @@ URxvt.color14:     #1cfafe
 ! white
 URxvt.color15: rgb:ff/ff/ff
 URxvt.foreground: rgb:bb/bb/bb
-URxvt.background: black
+URxvt.background: #070A21
 URxvt.colorBD: white
 URxvt.intensityStyles: true
 !

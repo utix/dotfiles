@@ -1,6 +1,7 @@
 set nocompatible                " Use Vim defaults instead of 100% vi compatibility
 set backspace=indent,eol,start  " more powerful backspacing
 set esckeys                     " allow usage of curs keys within insert mode
+set ttm=100
 
 syn on
 set encoding=utf-8
@@ -20,9 +21,18 @@ set path+=.;/
 set laststatus=2                " show status line?  Yes, always!
 if v:version >= 703
 "    set cursorline
-    set undofile                             " Pour activer la feature
-    set undodir=~/.cache/vim/bkp           " Pour ranger tous les fichier d'undo
-                                             " au même endroit
+if &term =~ '^xterm\|^rxvt.*'
+  " 1 or 0 -> blinking block
+  " 3 -> blinking underscore
+  " 5 -> blinking vertical bar
+  " 6 -> solid vertical bar
+  let &t_SI = "\e[3 q"
+  let &t_SR = "\e[1 q"
+  let &t_EI = "\e[4 q"
+endif
+set undofile                             " Pour activer la feature
+set undodir=~/.cache/vim/bkp             " Pour ranger tous les fichier d'undo
+                                         " au même endroit
 au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
                                          " qui sont dans /tmp
 endif
@@ -312,111 +322,112 @@ fun! <SID>myhi(cls, m, fg, bg)
         exec "hi ".a:cls." cterm=".a:m." ctermfg=".<SID>Y(a:fg)." ctermbg=".<SID>Y(a:bg)
     endif
 endfun
+
+
+highlight TrailSpaces ctermbg=darkblue
+match TrailSpaces / \+$/
+
+exec <SID>myhi("TrailSpaces",        "none",       "white", "darkblue")
+exec <SID>myhi("Visual",             "none",        "none", "darkgrey")
+exec <SID>myhi("IncSearch",     "underline",      "yellow", "darkblue")
+exec <SID>myhi("Search",             "none",        "grey", "darkblue")
+exec <SID>myhi("SearchCurrent", "underline",      "yellow", "darkgrey")
+
+exec <SID>myhi("NonText",            "none",    "darkgray", "none")
+
+exec <SID>myhi("SpellBad",           "bold",       "white", "red")
+exec <SID>myhi("SpellCap",           "none",    "lightred", "none")
+exec <SID>myhi("SpellLocal",    "underline",   "darkgreen", "none")
+exec <SID>myhi("SpellRare",     "underline",      "yellow", "none")
+exec <SID>myhi("Todo",          "underline",      "yellow", "darkgrey")
+exec <SID>myhi("Error",              "bold",       "white", "red")
+exec <SID>myhi("SpecialKey",         "none",      "yellow", "darkblue")
+
+exec <SID>myhi("Label",              "none",  "darkyellow", "none")
+exec <SID>myhi("cUserLabel",         "none",      "yellow", "none")
+exec <SID>myhi("Conditional",        "none",  "darkyellow", "none")
+exec <SID>myhi("Repeat",             "none",  "darkyellow", "none")
+exec <SID>myhi("Statement",          "none",  "darkyellow", "none")
+
+exec <SID>myhi("StorageClass",       "none",       "green", "none")
+exec <SID>myhi("Type",               "none",       "green", "none")
+exec <SID>myhi("Structure",          "none",       "green", "none")
+exec <SID>myhi("Directory",          "none",       "green", "none")
+
+exec <SID>myhi("Include",            "none", "darkmagenta", "none")
+exec <SID>myhi("PreProc",            "none", "darkmagenta", "none")
+exec <SID>myhi("Macro",              "none",    "darkblue", "none")
+exec <SID>myhi("SpecialChar",        "none", "darkmagenta", "none")
+
+exec <SID>myhi("Character",          "none",         "red", "none")
+exec <SID>myhi("String",             "none",     "magenta", "none")
+exec <SID>myhi("Constant",           "none",         "red", "none")
+
+exec <SID>myhi("Function",           "none",        "blue", "none")
+exec <SID>myhi("Identifier",         "none",        "blue", "none")
+
+" C")
+exec <SID>myhi("cFunction",          "bold",        "cyan", "none")
+exec <SID>myhi("cString",            "none",     "magenta", "none")
+exec <SID>myhi("cStructure",         "none",   "darkgreen", "none")
+
+exec <SID>myhi("OverLength",         "none",       "none", "lightred")
+
 if has("gui_running") || &t_Co >= 88
     if has("gui_running")
         exec <SID>myhi("Normal",       "none",       "dfdfdf",    "00000f")
         exec <SID>myhi("MoreMsg",      "none",       "dfdfdf",    "00000f")
     else
-        exec <SID>myhi("Normal",       "none",       "dfdfdf",    "NONE")
-        exec <SID>myhi("MoreMsg",      "none",       "dfdfdf",    "NONE")
+        exec <SID>myhi("Normal",       "none",       "dfdfdf",    "none")
+        exec <SID>myhi("MoreMsg",      "none",       "dfdfdf",    "none")
     endif
-    exec <SID>myhi("Comment",      "none",       "5F5F8A",    "NONE")
-    exec <SID>myhi("Folded",       "none",       "7C7CCB",    "NONE")
+    exec <SID>myhi("Comment",      "none",       "5F5F8A",    "none")
+    exec <SID>myhi("Folded",       "none",       "7C7CCB",    "none")
 
-    exec <SID>myhi("SpecialKey",   "none",       "696922",    "222269")
-    exec <SID>myhi("Todo",         "underline",  "yellow",    "333333")
-    exec <SID>myhi("Error",        "bold",       "white",     "red")
 
-    exec <SID>myhi("Function",     "none",       "4fcfcf",    "NONE")
-    exec <SID>myhi("Identifier",   "none",       "4fcfcf",    "NONE")
 
-    exec <SID>myhi("Cursor",       "reverse",    "dfdfdf",    "black")
-"   exec <SID>myhi("CursorLine",   "none",       "NONE",      "111111")
-    exec <SID>myhi("Visual",       "none",       "NONE",      "333333")
-    exec <SID>myhi("IncSearch",    "underline",  "yellow",    "darkblue")
-    exec <SID>myhi("Search",       "none",       "grey",      "darkblue")
+    exec <SID>myhi("StatusLine",   "none",     "yellow",   "333333")
+    exec <SID>myhi("StatusLineNc", "none",     "dfdfdf",   "1c1c1c")
+    exec <SID>myhi("WildMenu",     "none",      "white",   "0f0f2f")
+    exec <SID>myhi("VertSplit",    "none",   "darkgray",   "0f0f2f")
 
-    exec <SID>myhi("StatusLine",   "none",       "yellow",    "333333")
-    exec <SID>myhi("StatusLineNc", "none",       "dfdfdf",    "1c1c1c")
-    exec <SID>myhi("WildMenu",     "none",       "white",     "0f0f2f")
-    exec <SID>myhi("VertSplit",    "none",       "darkgray",  "0f0f2f")
-    exec <SID>myhi("NonText",      "none",       "darkgray",  "NONE")
+    exec <SID>myhi("MatchParen",   "none",      "white",   "0f0f2f")
+    exec <SID>myhi("Pmenu",        "none",     "dfdfdf",   "0f0f2f")
+    exec <SID>myhi("PmenuSel",     "none",      "white",   "3f3f7f")
+    exec <SID>myhi("PmenuSbar",    "none",      "white",   "0f0f2f")
+    exec <SID>myhi("PmenuThumb",   "none",     "3f3f7f",   "3f3f7f")
 
-    exec <SID>myhi("MatchParen",   "none",       "white",     "0f0f2f")
-    exec <SID>myhi("Pmenu",        "none",       "dfdfdf",    "0f0f2f")
-    exec <SID>myhi("PmenuSel",     "none",       "white",     "3f3f7f")
-    exec <SID>myhi("PmenuSbar",    "none",       "white",     "0f0f2f")
-    exec <SID>myhi("PmenuThumb",   "none",       "3f3f7f",    "3f3f7f")
+    exec <SID>myhi("ColorColumn",  "bold",      "none",    "202020")
 
-    exec <SID>myhi("SpellBad",     "underline",  "FF8362",    "NONE")
-    exec <SID>myhi("SpellCap",     "none",       "lightred",  "NONE")
-    exec <SID>myhi("SpellLocal",   "underline",  "darkgreen", "NONE")
-    exec <SID>myhi("SpellRare",    "underline",  "yellow",    "NONE")
-
-    exec <SID>myhi("Label",        "none",       "bf7f00",    "NONE")
-    exec <SID>myhi("Conditional",  "none",       "bf7f00",    "NONE")
-    exec <SID>myhi("Repeat",       "none",       "bf7f00",    "NONE")
-    exec <SID>myhi("Statement",    "none",       "bf7f00",    "NONE")
-
-    exec <SID>myhi("StorageClass", "none",       "098209",    "NONE")
-    exec <SID>myhi("Type",         "none",       "0eca0e",    "NONE")
-    exec <SID>myhi("Structure",    "none",       "darkgreen", "NONE")
-    exec <SID>myhi("Directory",    "none",       "098209",    "NONE")
-
-    exec <SID>myhi("Include",      "none",       "bf0fbf",    "NONE")
-    exec <SID>myhi("PreProc",      "none",       "bf0fbf",    "NONE")
-    exec <SID>myhi("Macro",        "none",       "bf0fbf",    "NONE")
-    exec <SID>myhi("SpecialChar",  "none",       "bf0fbf",    "NONE")
-
-    exec <SID>myhi("Character",    "none",       "bf0f0f",    "NONE")
-    exec <SID>myhi("String",       "none",       "magenta",   "NONE")
-    exec <SID>myhi("Constant",     "none",       "bf0f0f",    "NONE")
 
     " diff
-    exec <SID>myhi("DiffAdd",      "none",       "green",     "NONE")
-    exec <SID>myhi("DiffDelete",   "none",       "darkred",   "NONE")
-    exec <SID>myhi("DiffChange",   "none",       "NONE",      "333333")
-    exec <SID>myhi("DiffText",     "underline",  "NONE",      "NONE")
+    exec <SID>myhi("DiffAdd",      "none",       "green",     "none")
+    exec <SID>myhi("DiffDelete",   "none",     "darkred",     "none")
+    exec <SID>myhi("DiffChange",   "none",        "none",   "333333")
+    exec <SID>myhi("DiffText",     "underline",   "none",     "none")
 
-    " C
-    exec <SID>myhi("cFunction",    "bold",       "75FFFD",    "NONE")
-    exec <SID>myhi("cString",      "none",       "magenta" ,  "NONE")
-    exec <SID>myhi("cStructure",   "none",       "darkgreen", "NONE")
-    exec <SID>myhi("ColorColumn",  "bold",       "NONE",      "202020")
-    exec <SID>myhi("Label",        "none",       "FFFF00",    "NONE")
-    exec <SID>myhi("OverLength",   "none",       "NONE",      "592929")
     " Python
-    exec <SID>myhi("pythonStatement",   "none",  "1E90FF",    "NONE")
-    exec <SID>myhi("pythonConditional", "none",  "1E90FF",    "NONE")
-    exec <SID>myhi("pythonFunction",    "bold",  "3CB371",    "NONE")
-    exec <SID>myhi("pythonOperator",    "none",  "3CB371",    "NONE")
-    exec <SID>myhi("Exception",         "bold",  "FFFF33",    "NONE")
-    exec <SID>myhi("javaFuncDef",       "bold",  "3CB371",    "NONE")
-    exec <SID>myhi("javaBraces",       "bold",  "FFFF33",    "NONE")
+    exec <SID>myhi("pythonStatement",   "none", "1E90FF",    "none")
+    exec <SID>myhi("pythonConditional", "none", "1E90FF",    "none")
+    exec <SID>myhi("pythonFunction",    "bold", "3CB371",    "none")
+    exec <SID>myhi("pythonOperator",    "none", "3CB371",    "none")
+    exec <SID>myhi("Exception",         "bold", "FFFF33",    "none")
+    exec <SID>myhi("javaFuncDef",       "bold", "3CB371",    "none")
+    exec <SID>myhi("javaBraces",        "bold", "FFFF33",    "none")
 else
-    hi Comment      cterm=none       ctermfg=blue       ctermbg=none
-    hi Folded       cterm=none       ctermfg=brown      ctermbg=none
+    exec <SID>myhi("StatusLine",        "none",    "white",  "blue")
+    exec <SID>myhi("StatusLineNc",      "none",    "black", "white")
+    exec <SID>myhi("WildMenu",          "none",    "white",  "none")
+    exec <SID>myhi("VertSplit",         "none", "darkgray",  "none")
 
-    hi Visual       cterm=reverse    ctermfg=none       ctermbg=none
-    hi IncSearch    cterm=none       ctermfg=lightred   ctermbg=none
-    hi Search       cterm=underline  ctermfg=lightred   ctermbg=none
+    exec <SID>myhi("Comment",           "none",  "blue",     "none")
+    exec <SID>myhi("Folded",            "none",  "blue",     "none")
 
-    hi StatusLine   cterm=none       ctermfg=white      ctermbg=blue
-    hi StatusLineNc cterm=none       ctermfg=black      ctermbg=white
-    hi WildMenu     cterm=none       ctermfg=white      ctermbg=none
-    hi VertSplit    cterm=none       ctermfg=darkgray   ctermbg=none
-    hi NonText      cterm=none       ctermfg=darkgray   ctermbg=none
-
-    hi MatchParen   cterm=underline  ctermfg=none       ctermbg=none
-    hi Pmenu        cterm=none       ctermfg=gray       ctermbg=black
-    hi PmenuSel     cterm=none       ctermfg=black      ctermbg=gray
-    hi PmenuSbar    cterm=none       ctermfg=blue       ctermbg=blue
-    hi PmenuThumb   cterm=none       ctermfg=gray       ctermbg=gray
-
-    hi SpellBad     cterm=underline  ctermfg=lightred   ctermbg=none
-    hi SpellCap     cterm=none       ctermfg=lightred   ctermbg=none
-    hi SpellLocal   cterm=underline  ctermfg=darkgreen  ctermbg=none
-    hi SpellRare    cterm=none       ctermfg=none       ctermbg=none
+    exec <SID>myhi("MatchParen",   "underline",  "none",     "none")
+    exec <SID>myhi("Pmenu",             "none",  "gray",    "black")
+    exec <SID>myhi("PmenuSel",          "none", "black",     "gray")
+    exec <SID>myhi("PmenuSbar",         "none",  "blue",     "blue")
+    exec <SID>myhi("PmenuThumb",        "none",  "gray",     "gray")
 endif
 " Custom
 hi def link htmlTag htmlStatement
@@ -471,15 +482,23 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files && git submodule -q f
 
 
 "}}}
-" Fold starts with ╚⇒, nb lines is right aligned 78 cols
+" Fold starts with ╚, nb lines is right aligned 78 cols
 function! MyFoldText()
     let nblines = v:foldend - v:foldstart + 1
+    if nblines < 100
+        if nblines < 10
+            let nblines = ' '.nblines
+        endif
+        let nblines = ' '.nblines
+    elseif nblines >= 1000
+        let nblines = '###'
+    endif
     let w = 78 - &foldcolumn - (&number ? 8 : 0)
     let line = getline(v:foldstart)
     let comment = substitute(line, '^\W\+\|{{{\d\=\|\W\+$', '', 'g')
     let foldLevelStr = repeat("═", v:foldlevel - 1)
-    let expansionString = repeat("┈", w - 3 - strwidth(nblines.comment.foldLevelStr))
-    let txt = '╚'.foldLevelStr . '⇒ ' . comment . expansionString . nblines
+    let expansionString ='╞'.repeat("═", w - 4 - strwidth(nblines.comment.foldLevelStr)).'╡'
+    let txt = '╚'.foldLevelStr . '╡' . comment . expansionString . nblines
     let empty = repeat(" ", winwidth(0) - strwidth(txt))
     let txt = txt . empty
     return txt
