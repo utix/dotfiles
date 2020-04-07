@@ -30,11 +30,13 @@ if &term =~ '^xterm\|^rxvt.*'
   let &t_SR = "\e[1 q"
   let &t_EI = "\e[4 q"
 endif
-set undofile                             " Pour activer la feature
-set undodir=~/.cache/vim/bkp             " Pour ranger tous les fichier d'undo
-                                         " au même endroit
-au BufWritePre /tmp/* setl noundofile    " Pour ignorer les fichiers
-                                         " qui sont dans /tmp
+
+" activate undofile, put all the files into the same directory
+" Don't use it for tmp files
+set undofile
+set undodir=~/.cache/vim/bkp
+au BufWritePre /tmp/* setl noundofile
+
 endif
 
 set listchars=tab:\ \ ,trail:-,extends:>,nbsp:█,precedes:<
@@ -185,8 +187,13 @@ endfunction
 
 function! CleverTab()
     let c = strpart(getline('.'), col('.')-2, 1)
-    if c == ' ' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
-        return TabAlign()
+    echom c
+    if c == ' ' || c == '	' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
+        if exists("g:loaded_linuxsty")
+            return "\<Tab>"
+        else
+            return TabAlign()
+        endif
     else
         return "\<C-P>"
     endif
