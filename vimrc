@@ -71,7 +71,8 @@ au FileType html,xhtml,xml setlocal sw=2 syntax=smarty
 au FileType css  set et sts=4 sw=4
 au FileType sql  set et sts=4 sw=4
 au FileType actionscript  set et sts=4 sw=4
-
+au FileType go set noet ts=4 nolist
+let g:linuxsty_patterns = [ "/usr/src/", "/linux", "/home/aurelienl/dev/util-linux/" ]
 au BufRead,BufNewFile *.blk,*.fc setf c
 au BufRead,BufNewFile *.blkk setf cpp
 
