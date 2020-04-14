@@ -1,11 +1,5 @@
 " setl foldmarker=/**,*/
 setl foldmethod=marker
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-if &textwidth > 0
-    let m = matchadd('OverLength', '\%>'.&tw.'v.\+', -1)
-else
-    match OverLength /\%79v.*/
-endif
 syn keyword cOperator  ssizeof fieldsizeof countof assert offsetof fieldtypeof bitsizeof
 syn keyword cStatement p_delete p_new p_new_raw p_clear p_realloc
 syn keyword cStatement mp_delete mp_new mp_new_raw

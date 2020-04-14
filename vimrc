@@ -13,6 +13,7 @@ set hidden                      " allow to cycle and hide modified buffers
 set viminfo='1000,/1000,:1000,<1000,@1000,n~/.viminfo
 set history=1000
 set re=1
+set tw=80
 
 set tags=tags;/,.tags;/,TAGS;/
 exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n\" | tr \" \" \",\"")
@@ -187,7 +188,6 @@ endfunction
 
 function! CleverTab()
     let c = strpart(getline('.'), col('.')-2, 1)
-    echom c
     if c == ' ' || c == '	' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
         if exists("g:loaded_linuxsty")
             return "\<Tab>"
@@ -440,6 +440,25 @@ endif
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
+augroup tw_auto_commands
+    autocmd!
+    autocmd InsertEnter * highlight OverLength cterm=bold,underline ctermbg=black ctermfg=none
+    autocmd OptionSet textwidth call OverHighlight()
+    autocmd InsertLeave * highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+augroup end
+function! OverHighlight()
+    if &textwidth > 0
+        if exists("g:overlengthmatch")
+            call matchdelete(g:overlengthmatch)
+        endif
+        let g:overlengthmatch = matchadd('OverLength', '\%>'.&tw.'v.\+', -1)
+    else
+        echom "forced"
+        match OverLength /\%79v.*/
+    endif
+endfunction
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+call OverHighlight()
 setl foldmethod=marker
 call pathogen#infect()
 " syntastic {{{
