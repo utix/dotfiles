@@ -13,9 +13,6 @@
 [submodule "vim/bundle/vim-phpcs"]
 	path = vim/bundle/vim-phpcs
 	url = git@github.com:utix/vim-phpcs.git
-[submodule "vim/bundle/file-line"]
-	path = vim/bundle/file-line
-	url = git@github.com:utix/file-line.git
 [submodule "vim/bundle/tabular"]
 	path = vim/bundle/tabular
 	url = https://github.com/godlygeek/tabular.git
@@ -34,3 +31,6 @@
 [submodule "vim/bundle/vim-linux-coding-style"]
 	path = vim/bundle/vim-linux-coding-style
 	url = git@github.com:utix/vim-linux-coding-style.git
+[submodule "vim/bundle/vim-fetch"]
+	path = vim/bundle/vim-fetch
+	url = https://github.com/wsdjeg/vim-fetch
