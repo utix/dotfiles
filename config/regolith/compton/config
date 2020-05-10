@@ -1,0 +1,19 @@
+backend = "glx";
+glx-no-stencil = true;
+glx-copy-from-front = false;
+glx-no-rebind-pixmap = true;
+use-damage = true;
+shadow = false;
+
+opacity-rule = [ "85:class_g = 'URxvt' && focused",
+    "70:class_g = 'URxvt' && !focused"];
+
+active-opacity = 1;
+inactive-dim = 0.03;
+
+fading = false;
+fade-delta = 3;
+fade-out-step = 0.05;
+vsync = true;
+dbe = false;
+sw-opti = false;

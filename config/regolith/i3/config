@@ -73,6 +73,8 @@ set_from_resource $ws19 i3-wm.workspace.19.name "19"
 
 ## Launch // Terminal // <> Enter ##
 bindsym $mod+Return exec /usr/bin/x-terminal-emulator
+## Launch // Terminal // <> c ##
+bindsym $mod+c exec /usr/bin/x-terminal-emulator
 
 ## Launch // Browser // <><Shift> Enter ##
 bindsym $mod+Shift+Return exec gtk-launch $(xdg-settings get default-web-browser)
@@ -82,6 +84,8 @@ set_from_resource $rofiTheme rofi.theme /etc/regolith/styles/lascaille/rofi.rasi
 ## Launch // Application // <> Space ##
 set_from_resource $i3-wm.program.launcher.app i3-wm.program.launcher.app rofi -show drun -theme $rofiTheme
 bindsym $mod+space exec $i3-wm.program.launcher.app
+## Launch // Application // <Alt> F2 ##
+bindsym $alt+F2 exec $i3-wm.program.launcher.app
 
 ## Launch // Command // <><Shift> Space ##
 set_from_resource $i3-wm.program.launcher.cmd i3-wm.program.launcher.cmd rofi -show run -theme $rofiTheme
@@ -99,21 +103,26 @@ bindsym $mod+Shift+question exec --no-startup-id $i3-wm.program.help
 set_from_resource $i3-wm.program.file_search i3-wm.program.file_search rofi -show find -modi find:/usr/share/rofi/modi/finder.sh
 bindsym $mod+$alt+space exec $i3-wm.program.file_search
 
+## Launch // Print Screen //  Print
+bindsym Print exec "flameshot gui"
 ###############################################################################
 # Window and Workspace Navigation
 ###############################################################################
 
-## Navigate // Relative Window // <> ↑ ↓ ← → ##
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+## Navigate // Relative Window // <Alt> ↑ ↓ ← → ##
+bindsym $alt+Left focus left
+bindsym $alt+Down focus down
+bindsym $alt+Up focus up
+bindsym $alt+Right focus right
 
-## Navigate // Relative Window // <> k j h l ##
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+## Navigate // Relative Window // <Alt> k j h l ##
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+## Navigate // Cycle Window // <> j k ##
+bindsym $mod+j exec "~/.config/regolith/i3/bin/focus.py"
+bindsym $mod+k exec "~/.config/regolith/i3/bin/focus.py -p"
 
 ## Navigate // Workspaces 1-10 // <> 0..9 ##
 bindsym $mod+1 workspace number $ws1
@@ -140,18 +149,22 @@ bindsym $mod+Ctrl+9 workspace number $ws19
 ## Navigate // Next Workspace // <> Tab ##
 bindsym $mod+Tab workspace next
 
-## Navigate // Next Workspace // <><Alt> → ##
-bindsym $mod+$alt+Right workspace next
+## Navigate // Next Workspace // <> → ##
+bindsym $mod+Right workspace next
 
 ## Navigate // Previous Workspace // <><Shift> Tab ##
 bindsym $mod+Shift+Tab workspace prev
 
-## Navigate // Previous Workspace // <><Alt> ← ##
-bindsym $mod+$alt+Left workspace prev
+## Navigate // Previous Workspace // <> ← ##
+bindsym $mod+Left workspace prev
 
 ## Navigate // Scratchpad // <><Ctrl> a ##
 bindsym $mod+Ctrl+a scratchpad show
 
+## Navigate // Move to Next Workspace // <><Alt> → ##
+bindsym $mod+$alt+Right move container to workspace next workspace next
+## Navigate // Move to Previous Workspace // <><Alt> ← ##
+bindsym $mod+$alt+Left move container to workspace prev workspace prev
 ###############################################################################
 # Window and Workspace Configuration
 ###############################################################################
@@ -191,6 +204,8 @@ bindsym $mod+Shift+t focus mode_toggle
 
 ## Modify // Window Layout Mode // <> t ##
 bindsym $mod+t layout toggle tabbed splith splitv
+## Modify // Vertical Split // <> v ##
+bindsym $mod+v  split v
 
 ## Modify // Move Window to Workspace 1 - 10 // <><Shift> 0..9 ##
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -286,9 +301,6 @@ bindsym $mod+Shift+s exec $i3-wm.program.sleep
 # System Management
 ###############################################################################
 
-## Modify // Settings // <> c ##
-set_from_resource $i3-wm.program.settings i3-wm.program.settings gnome-control-center
-bindsym $mod+c exec $i3-wm.program.settings
 
 ## Modify // Display Settings // <> d ##
 set_from_resource $i3-wm.program.display i3-wm.program.display gnome-control-center display
@@ -496,6 +508,12 @@ bar {
   }
 }
 
+bar {
+    workspace_buttons no
+    position bottom
+    tray_output primary
+    tray_padding 2px
+}
 ###############################################################################
 # External programs launched with i3
 ###############################################################################
@@ -505,8 +523,8 @@ set_from_resource $i3-wm.program.compositor i3-wm.program.compositor /usr/share/
 exec --no-startup-id $i3-wm.program.compositor
 
 # Start Rofication for notifications
-set_from_resource $i3-wm.program.notifications i3-wm.program.notifications /usr/bin/rofication-daemon
-exec --no-startup-id $i3-wm.program.notifications
+# set_from_resource $i3-wm.program.notifications i3-wm.program.notifications /usr/bin/rofication-daemon
+# exec --no-startup-id $i3-wm.program.notifications
 
 # Launch first time user experience script
 set_from_resource $i3-wm.program.ftui i3-wm.program.ftui /usr/bin/regolith-ftue
@@ -525,3 +543,7 @@ set_from_resource $i3-wm.program.2 i3-wm.program.2 :
 exec --no-startup-id $i3-wm.program.2
 set_from_resource $i3-wm.program.3 i3-wm.program.3 :
 exec --no-startup-id $i3-wm.program.3
+exec --no-startup-id "i3-msg 'workspace 2 >_; append_layout /home/aurelienl/.config/regolith/i3/workspace-2.json'"
+assign [class="Slack"] $ws1
+assign [class="zoom"] $ws3
+for_window [class="zoom"] floating enable
