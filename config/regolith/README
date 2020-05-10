@@ -1,0 +1,6 @@
+= Try i3 using regolith
+
+Next steps: Font issue on the bari when using nerd font, look to other bar
+
+Notification manager changed to dunst
+~/.config/dunst/dunstrc
