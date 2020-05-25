@@ -816,6 +816,23 @@ client.connect_signal("unfocus", function(c)
     end
 end)
 -- }}}
+function on_selected_change(tag, data)
+    if data and data.cmd and tag.selected and tag_cmd[tag.index] then
+        for _,v in ipairs(type(data.cmd) == "string" and {data.cmd} or data.cmd) do
+            awful.spawn.single_instance(v, {}, function(c) return c.class == "Google-chrome" end)
+        end
+        tag_cmd[tag.index] = false
+    end
+end
+tag_cmd = {}
+function load_prog(tag, cmd)
+    local screen = awful.screen.focused()
+    local tag = screen.tags[tag]
+    if tag then
+        tag_cmd[tag.index] = true
+        tag:connect_signal("property::selected", function(t) on_selected_change(t, {cmd = cmd}) end)
+    end
+end
 --awful.spawn('gnome-panel')
 awful.spawn('xcompmgr')
 awful.spawn('nm-applet')
@@ -828,3 +845,6 @@ awful.spawn('xinput set-prop 10 314 0')
 awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
 -- awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
+load_prog(2, {terminal, terminal, terminal})
+load_prog(8, "google-chrome --profile-directory='Profile 1'")
+load_prog(9, {"google-chrome --profile-directory='Default'", "keepass2"})
