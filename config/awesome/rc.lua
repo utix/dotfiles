@@ -226,7 +226,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "", "", "", "4", "5", "6", "7", "", "" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -368,7 +368,7 @@ globalkeys = gears.table.join(
             return
         end
         -- get previous tag (modulo 9 excluding 0 to wrap from 1 to 9)
-        local tag = client.focus.screen.tags[(t.name - 2) % 9 + 1]
+        local tag = client.focus.screen.tags[(t.index - 2) % 9 + 1]
         awful.client.movetotag(tag)
         awful.tag.viewprev()
     end
@@ -381,7 +381,7 @@ globalkeys = gears.table.join(
             return
         end
         -- get previous tag (modulo 9 excluding 0 to wrap from 1 to 9)
-        local tag = client.focus.screen.tags[t.name  % 9 + 1]
+        local tag = client.focus.screen.tags[t.index  % 9 + 1]
         awful.client.movetotag(tag)
         awful.tag.viewnext()
     end
@@ -735,8 +735,8 @@ awful.rules.rules = {
 
     { rule = { class = "slack" },
       properties = { screen = 1, tag = "1" } },
-    { rule = { class = "google-chrome" },
-      properties = { screen = 1, tag = "9" } },
+    { rule = { class = "zoom" },
+      properties = { screen = 1, tag = "3", switchtotag = true } },
 }
 -- }}}
 
