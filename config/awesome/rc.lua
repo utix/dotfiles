@@ -31,7 +31,11 @@ local has_fdo, freedesktop = pcall(require, "freedesktop")
 require('module.notifications')
 
 -- Mainly for Chrome notification
-naughty.config.defaults['icon_size'] = 100
+naughty.config.defaults['icon_size'] = 70
+naughty.config.defaults['timeout'] = 5
+naughty.config.defaults['position'] = "top_middle"
+naughty.config.defaults['bg'] = "#3030b0"
+naughty.config.defaults['fg'] = "#ffffff"
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
@@ -41,7 +45,7 @@ beautiful.init(theme_path)
 beautiful.font = "DejaVu Sans 10"
 
 -- This is used later as the default terminal and editor to run.
-terminal = "rxvt"
+terminal = "roxterm"
 -- terminal = "terminator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
@@ -133,7 +137,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 local calendar2 = require('calendar2')
-calendar2.addCalendarToWidget(mytextclock, io, "<span color=\"yellow\"><b>%s</b></span>")
+calendar2.addCalendarToWidget(mytextclock, io, "<span color=\"yellow\" weight=\"bold\">%s</span>")
 -- Initialize widget
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -285,17 +289,19 @@ awful.screen.connect_for_each_screen(function(s)
             --mykeyboardlayout,
             ssh_widget,
             battery_widget({
-                notification= true,
+                display_notification= true,
                 show_current_level=true,
+                enable_battery_warning=true,
                 margin_right=5
             }),
-            volume_widget({notification = true}),
+            volume_widget({display_notification = true}),
             spacer,
             mic_widget,
             spacer,
             mytextclock,
             weather_widget({
-                api_key = '542ffd081e67f4512b705f89d2a611b2',
+              --  api_key = '542ffd081e67f4512b705f89d2a611b2',
+                api_key = '4be65c6368d87c8154a3d9640545d700',
                 city = 'Bordeaux,fr',
                 units = 'metric',
             }),
@@ -686,6 +692,7 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
+-- Use xprop
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
@@ -711,6 +718,7 @@ awful.rules.rules = {
           "Gpick",
           "Keepass",
           "keepass2",
+          "zoom",
           "Kruler",
           "MessageWin",  -- kalarm.
           "Sxiv",
@@ -807,12 +815,16 @@ end)
 
 client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
-    c.opacity = 1
+    if c.class == "URxvt" or c.class == "Roxterm" then
+        c.opacity = 0.9
+    else
+        c.opacity = 1
+    end
 end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
-    if c.class == "URxvt" then
-        c.opacity = 0.8
+    if c.class == "URxvt" or c.class == "Roxterm" then
+        c.opacity = 0.7
     end
 end)
 -- }}}
