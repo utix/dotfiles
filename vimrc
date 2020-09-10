@@ -13,8 +13,17 @@ set hidden                      " allow to cycle and hide modified buffers
 set viminfo='1000,/1000,:1000,<1000,@1000,n~/.viminfo
 set history=1000
 set re=1
-set tw=80
-
+let g:plug_window = 'above topleft new'
+call plug#begin('~/.vim/plugged')
+    Plug 'scrooloose/nerdtree'
+    Plug 'ryanoasis/vim-devicons'
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+    Plug 'cespare/vim-toml'
+"    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+    " Initialize plugin system
+call plug#end()
+highlight! link NERDTreeFlags NERDTreeDir
+let g:go_template_autocreate = 0
 set tags=tags;/,.tags;/,TAGS;/
 exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n\" | tr \" \" \",\"")
 set path+=.;/
@@ -51,34 +60,52 @@ set wildmode=longest,full
 
 set clipboard=unnamed          "used klipper for paste
 set grepprg=git\ grep\ -n
-hi SpecialKey cterm=bold ctermfg=DarkRed ctermbg=none
+
+augroup tw_auto_commands
+    autocmd!
+    autocmd InsertEnter * highlight OverLength cterm=bold,underline ctermbg=black ctermfg=none
+    autocmd OptionSet textwidth call OverHighlight()
+    autocmd VimEnter * call OverHighlight()
+    autocmd InsertLeave * highlight OverLength cterm=bold ctermbg=black ctermfg=yellow
+augroup end
+function! OverHighlight()
+    if &l:buftype ==# 'help'
+        return
+    endif
+    if exists("g:overlengthmatch")
+        call matchdelete(g:overlengthmatch)
+    endif
+    if &textwidth > 0
+        let g:overlengthmatch = matchadd('OverLength', '\%>'.&tw.'v.\+', -1)
+    endif
+endfunction
 
 au BufReadPost *
-	\ if line("'\"") > 0 && line("'\"") <= line("$") |
-	\   exe "normal g`\"" |
-	\ endif
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
 
 au BufWinEnter *   syn match ErrorMsg "\%u00A0"
 let loaded_matchparen = 1
 
 filetype plugin indent on
 
-au FileType php  set et sts=4 sw=4
-au FileType python  set et sts=4 sw=4
-au FileType html set et sts=4 sw=4 syntax=php
-au FileType java set et sts=4 sw=4
-au FileType c set et sts=4 sw=4
-au FileType cpp set et sts=4 sw=4
-au FileType javascript set et sts=2 sw=2
-au FileType html,xhtml,xml setlocal sw=2 syntax=smarty
-au FileType css  set et sts=4 sw=4
-au FileType sql  set et sts=4 sw=4
-au FileType actionscript  set et sts=4 sw=4
-au FileType go set noet ts=4 nolist
+au FileType php  set et sts=4 sw=4 nowrap
+au FileType python  set et sts=4 sw=4 nowrap
+au FileType html set et sts=4 sw=4 syntax=php nowrap
+au FileType java set et sts=4 sw=4 nowrap
+au FileType c set et sts=4 sw=4 tw=80 nowrap
+au FileType cpp set et sts=4 sw=4 tw=80 nowrap
+au FileType javascript set et sts=2 sw=2 nowrap
+au FileType html,xhtml,xml setlocal sw=2 syntax=smarty nowrap
+au FileType css  set et sts=4 sw=4 nowrap
+au FileType sql  set et sts=4 sw=4 nowrap
+au FileType actionscript  set et sts=4 sw=4 nowrap
+au FileType go set noet ts=4 nolist tw=80 nowrap
+au FileType make set noexpandtab shiftwidth=8 softtabstop=0 nolist nowrap
 let g:linuxsty_patterns = [ "/usr/src/", "/linux", "/home/aurelienl/dev/util-linux/" ]
 au BufRead,BufNewFile *.blk,*.fc setf c
 au BufRead,BufNewFile *.blkk setf cpp
-
 let c_gnu=1
 let c_space_errors=1
 let c_no_curly_errors=1
@@ -126,7 +153,7 @@ map [32~ :JavaImportOrganize<CR>
 map <F9> :vsplit<cr>
 map <F10> :vsplit<cr>:bn<cr>
 "set makeprg=LC_ALL=C\ unbuffer\ make
-map <F11> :make package<cr>
+map <F11> :make<cr>
 autocmd FileType java no <F11> :make clean install<cr>
 autocmd FileType java no <F2> :JavaSearch<cr>
 au FileType java set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
@@ -144,6 +171,8 @@ map <S-Right> :lnext<cr>
 " previous syntastic error
 map <S-Left> :lprev<cr>
 map \| :Tab/\|<cr>
+au QuickFixCmdPost [^l]* nested cwindow
+au QuickFixCmdPost    l* nested lwindow
 
 nnoremap \s ea<C-X><C-S>
 "map! <PageUp> 25<Up>
@@ -243,50 +272,11 @@ if exists("syntax_on")
    syntax reset
 endif
 
-if version >= 703
-    set cc=+1
-    hi ColorColumn cterm=none ctermfg=none ctermbg=darkgray
-else
-    au FileType c,cpp match OverLength /\%79v.\+/
-    hi OverLength cterm=none ctermfg=none ctermbg=darkblue
-endif
-
 " a.vim
 let g:alternateRelativeFiles   = 1
 let g:alternateExtensions_blk  = "h"
 let g:alternateExtensions_blkk = "h"
 let g:alternateExtensions_h    = "c,cpp,cxx,cc,CC,blk,blkk"
-if has("gui_running")
-    set guioptions=eit
-    set guifont=terminus
-    set guicursor=a:blinkon0
-    set background=light
-
-    fun! GuiTabLabel()
-        let label = ''
-        let bufnrlist = tabpagebuflist(v:lnum)
-
-        " Append the number of windows in the tab page if more than one
-        let wincount = tabpagewinnr(v:lnum, '$')
-        let label .= wincount
-
-        " Add '[*]' if one of the buffers in the tab page is modified
-        for bufnr in bufnrlist
-            if getbufvar(bufnr, "&modified")
-                let label .= '[*]'
-                break
-            endif
-        endfor
-
-
-        if exists("t:tabname")
-            return t:tabname . ': ' . label
-        else
-            return label . '[' . bufname(bufnrlist[tabpagewinnr(v:lnum) - 1]) .']'
-        endif
-    endf
-    set guitablabel=%{GuiTabLabel()}
-endif
 
 fun! <SID>Y(a)
     if strlen(a:a) != 6 || a:a == "yellow"
@@ -455,25 +445,6 @@ endif
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
-augroup tw_auto_commands
-    autocmd!
-    autocmd InsertEnter * highlight OverLength cterm=bold,underline ctermbg=black ctermfg=none
-    autocmd OptionSet textwidth call OverHighlight()
-    autocmd InsertLeave * highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-augroup end
-function! OverHighlight()
-    if &textwidth > 0
-        if exists("g:overlengthmatch")
-            call matchdelete(g:overlengthmatch)
-        endif
-        let g:overlengthmatch = matchadd('OverLength', '\%>'.&tw.'v.\+', -1)
-    else
-        echom "forced"
-        match OverLength /\%79v.*/
-    endif
-endfunction
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-call OverHighlight()
 setl foldmethod=marker
 call pathogen#infect()
 " syntastic {{{
