@@ -188,8 +188,9 @@ endfunction
 
 function! CleverTab()
     let c = strpart(getline('.'), col('.')-2, 1)
-    if c == ' ' || c == '	' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
-        if exists("g:loaded_linuxsty")
+    echom c
+    if c == '' || c == '	' || c == ' ' || c == '    ' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
+        if &expandtab == "noexpandtab"
             return "\<Tab>"
         else
             return TabAlign()
@@ -336,9 +337,10 @@ highlight TrailSpaces ctermbg=darkblue
 match TrailSpaces / \+$/
 
 exec <SID>myhi("TrailSpaces",        "none",       "white", "darkblue")
+exec <SID>myhi("OverLength",         "none",      "yellow", "black")
 exec <SID>myhi("Visual",             "none",        "none", "darkgrey")
 exec <SID>myhi("IncSearch",     "underline",      "yellow", "darkblue")
-exec <SID>myhi("Search",             "none",        "grey", "darkblue")
+exec <SID>myhi("Search",             "none",       "black", "darkblue")
 exec <SID>myhi("SearchCurrent", "underline",      "yellow", "darkgrey")
 
 exec <SID>myhi("NonText",            "none",    "darkgray", "none")
@@ -373,13 +375,26 @@ exec <SID>myhi("Constant",           "none",         "red", "none")
 
 exec <SID>myhi("Function",           "none",        "blue", "none")
 exec <SID>myhi("Identifier",         "none",        "blue", "none")
+exec <SID>myhi("Keyword",            "none",       "brown", "none")
+exec <SID>myhi("Operator",           "bold",      "yellow", "none")
 
 " C")
 exec <SID>myhi("cFunction",          "bold",        "cyan", "none")
 exec <SID>myhi("cString",            "none",     "magenta", "none")
 exec <SID>myhi("cStructure",         "none",   "darkgreen", "none")
 
-exec <SID>myhi("OverLength",         "none",       "none", "lightred")
+" Go")
+exec <SID>myhi("goFunction",         "bold",        "cyan", "none")
+exec <SID>myhi("goFunctionCall",     "bold",        "cyan", "none")
+let g:go_highlight_operators = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+
+
+
 
 if has("gui_running") || &t_Co >= 88
     if has("gui_running")
