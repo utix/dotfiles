@@ -15,6 +15,8 @@ set history=1000
 set re=1
 let g:plug_window = 'above topleft new'
 call plug#begin('~/.vim/plugged')
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
     Plug 'scrooloose/nerdtree'
     Plug 'ryanoasis/vim-devicons'
     Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -139,8 +141,8 @@ map <C-Up> <C-w><Up>
 map! <C-Up> <Esc> <C-w><Up>
 map <C-Down> <C-w><Down>
 map! <C-Down>  <Esc> <C-w><Down>
-map <F3> \be
-map! <F3> <Esc> \be
+map <F3> :NERDTree<cr>
+map! <F3> <Esc>:NERDTree<cr>
 map <F4> :gr! -w <cword><cr>
 " spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
@@ -442,10 +444,16 @@ else
     exec <SID>myhi("PmenuSbar",         "NONE",  "blue",     "blue")
     exec <SID>myhi("PmenuThumb",        "NONE",  "gray",     "gray")
 endif
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline_powerline_fonts = 1
+call airline#parts#define_raw('linenr', '%3l')
+let g:airline_section_z = airline#section#create(['%2p%% ',
+            \ g:airline_symbols.linenr .' ', 'linenr', ':%2c '])
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
 setl foldmethod=marker
+nnoremap <space> za
 call pathogen#infect()
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
