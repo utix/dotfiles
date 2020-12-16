@@ -149,7 +149,7 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 map <S-F5> z=
 map <F6> ma
 map <F7> `a
-map <F8> :JavaImport<CR>
+map <F8> :GoImports<CR>
 map <S-F8> :JavaImportOrganize<CR>
 map [32~ :JavaImportOrganize<CR>
 map <F9> :vsplit<cr>
@@ -160,6 +160,7 @@ autocmd FileType java no <F11> :make clean install<cr>
 autocmd FileType java no <F2> :JavaSearch<cr>
 au FileType java set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
 au FileType pom  set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
+autocmd FileType go no <F11> :GoRun<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 
 " next compilation error
