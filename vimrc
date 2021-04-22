@@ -99,6 +99,7 @@ au FileType java set et sts=4 sw=4 nowrap
 au FileType c set et sts=4 sw=4 tw=80 nowrap
 au FileType cpp set et sts=4 sw=4 tw=80 nowrap
 au FileType javascript set et sts=2 sw=2 nowrap
+au FileType lua set et sts=2 sw=2 nowrap
 au FileType html,xhtml,xml setlocal sw=2 syntax=smarty nowrap
 au FileType css  set et sts=4 sw=4 nowrap
 au FileType sql  set et sts=4 sw=4 nowrap
@@ -387,8 +388,6 @@ let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 
 
-
-
 if has("gui_running") || &t_Co >= 88
     if has("gui_running")
         exec <SID>myhi("Normal",       "NONE",       "dfdfdf",    "00000f")
@@ -450,6 +449,11 @@ let g:airline_powerline_fonts = 1
 call airline#parts#define_raw('linenr', '%3l')
 let g:airline_section_z = airline#section#create(['%2p%% ',
             \ g:airline_symbols.linenr .' ', 'linenr', ':%2c '])
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.notexists = " "
 " Custom
 hi def link htmlTag htmlStatement
 hi def link htmlEndTag htmlStatement
