@@ -179,5 +179,8 @@ REPORTTIME=2                # report time if execution exceeds amount of seconds
 SAVEHIST=10000              # maximum of history events to be save
 LOGCHECK=60
 watch=(notme)               # watch login/logout
-WORDCHARS="*?_-.[]~/&;!#$%^(){}<>"
-                            # part of word in line editor
+WORDCHARS="*?_-.[]~/&;!#$%^(){}<>" # part of word in line editor
+
+ZSH_THEME_GIT_SHOW_UPSTREAM=1 # 0 no upstream,
+                              # 1 only with different of origin/<localbranch>,
+                              # 2 always
