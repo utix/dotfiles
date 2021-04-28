@@ -130,7 +130,6 @@ setopt no_posix_builtins    # yeah don't like posix, i'm a rebel
 setopt print_eight_bit      # just to be sure
 #setopt privileged           #
 setopt no_prompt_bang       # dont perform history expansion in prompt
-setopt no_prompt_cr         # don'tprint <cr> before prompt ---> see precmd !
 setopt prompt_percent       # expand % escapes in prompt
 setopt prompt_subst         # subts in prompt
 setopt pushd_ignore_dups    # ignore dups in pushd
@@ -164,6 +163,8 @@ setopt transient_rprompt    # better for cut/paste
 setopt vi                   # use bindkeys
 setopt no_xtrace            # do not debug by default
 setopt zle                  # use zsh le
+setopt PROMPT_CR
+PROMPT_EOL_MARK=$(echo -n ' %F{red}')
 
 is-at-least 4.3.0 && {
     unsetopt hist_save_by_copy
