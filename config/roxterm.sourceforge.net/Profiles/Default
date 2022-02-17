@@ -1,0 +1,13 @@
+[roxterm profile]
+bold_is_bright=1
+hide_menubar=1
+always_show_tabs=0
+audible_bell=0
+overlay_scrollbar=0
+scrollbar_pos=0
+font=FiraCode Nerd Font Medium 10
+saturation=1.000000
+scroll_on_keystroke=1
+login_shell=0
+use_custom_command=0
+use_ssh=0
