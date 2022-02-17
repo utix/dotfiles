@@ -1,19 +1,20 @@
 [alias]
-        cat=-p cat-file -p
-        branche=branch
-        branch=branch
-        co=checkout
-        ri = rebase -i
-        st=status
-        undo=reset HEAD~1
-        tempo=commit -a -m tempo
-        master=checkout master --
-        willpush=log origin/master..master
-	squash=commit -s --amend -C HEAD
-	amend=commit -s --amend
-        post-review=send-email --no-chain-reply-to --suppress-cc all --suppress-from --no-signed-off-by-cc --annotate --compose --to corp.software.review@news.intersec.com -C -C -M
-        lg=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-        workdir = !sh /usr/share/doc/git/contrib/workdir/git-new-workdir
+    cat=-p cat-file -p
+    branche=branch
+    branch=branch
+    co=checkout
+    ri = rebase -i
+    st=status
+    undo=reset HEAD~1
+    tempo=commit -a --no-verify --no-gpg-sign -m tempo
+    master=checkout master --
+    willpush=log origin/master..master
+    squash=commit -s --amend -C HEAD
+    amend=commit -s --amend
+    post-review=send-email --no-chain-reply-to --suppress-cc all --suppress-from --no-signed-off-by-cc --annotate --compose --to corp.software.review@news.intersec.com -C -C -M
+    lg=log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    workdir = !sh /usr/share/doc/git/contrib/workdir/git-new-workdir
+    pushd = push -u origin HEAD
 
 [pager]
 	color = true
@@ -58,3 +59,20 @@
     color = always
 [rerere]
     enabled = true
+[credential]
+    helper = /usr/lib/git-core/git-credential-libsecret
+[sendemail]
+    smtpEncryption = tls
+    smtpServer = ssl.polytechnique.org
+    smtpUser = aurelien.lajoie.2000
+    smtpServerPort = 587
+[core]
+    pager = less -x1,5
+[commit]
+    gpgsign = true
+[gpg]
+    program = gpg2
+[push]
+    default = upstream
+[init]
+    templateDir = /home/aurelienl/.git-template
