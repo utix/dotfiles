@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dotfiles="$(dirname "$(dirname "$(readlink -f "$0")")")"
+
+dot_cp() {
+    cp "$HOME/$2" "$1"
+}
+
+find $dotfiles -mindepth 1 \( -name '[+.]*' -prune -o -not -type d -print \) | while read f; do
+    dot_cp "$f" ".${f#$dotfiles/}"
+done
