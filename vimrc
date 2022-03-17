@@ -15,16 +15,18 @@ set history=1000
 set re=1
 let g:plug_window = 'above topleft new'
 call plug#begin('~/.vim/plugged')
+    Plug 'tpope/vim-fugitive'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    Plug 'scrooloose/nerdtree'
+    Plug 'preservim/nerdtree'
     Plug 'ryanoasis/vim-devicons'
     Plug 'Xuyuanp/nerdtree-git-plugin'
     Plug 'cespare/vim-toml'
+    Plug 'prashanthellina/follow-markdown-links'
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
 call plug#end()
-highlight! link NERDTreeFlags NERDTreeDir
+set t_RV=
 let g:go_template_autocreate = 0
 set tags=tags;/,.tags;/,TAGS;/
 exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n\" | tr \" \" \",\"")
