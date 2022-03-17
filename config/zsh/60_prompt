@@ -4,13 +4,37 @@ autoload colors && colors
 
 
 setopt extended_glob
+local lc=$'\e[' rc=m bold="01;" # Standard ANSI terminal escape values
+
+typeset -Ag bright_colour fg_bright_bold
+bright_colour=(
+  black   90
+  red     91
+  green   92
+  yellow  93
+  blue    94
+  magenta 95
+  cyan    96
+  white   97
+)
+fg_bright_bold=(
+  black   "$lc$bold$bright_colour[black]$rc"
+  red     "$lc$bold$bright_colour[red]$rc"
+  green   "$lc$bold$bright_colour[green]$rc"
+  yellow  "$lc$bold$bright_colour[yellow]$rc"
+  blue    "$lc$bold$bright_colour[blue]$rc"
+  magenta "$lc$bold$bright_colour[magenta]$rc"
+  cyan    "$lc$bold$bright_colour[cyan]$rc"
+  white   "$lc$bold$bright_colour[white]$rc"
+)
+
 
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$reset_color%}%{$fg[green]%}▲"
-ZSH_THEME_GIT_PROMPT_BEHIND="%{$reset_color%}%{$fg_bold[magenta]%}▼"
+ZSH_THEME_GIT_PROMPT_BEHIND="%{$reset_color%}%{$fg_bright_bold[magenta]%}▼"
 ZSH_THEME_GIT_PROMPT_ADDED="%{$reset_color%}%F{green}✚"
-ZSH_THEME_GIT_PROMPT_DIVERGED="%{$reset_color%}%{$fg_bold[red]%}✗"
-ZSH_THEME_GIT_PROMPT_STAGED="%{$reset_color%}%{$fg_bold[green]%}⚑"
-ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$reset_color%}%{$fg_bold[yellow]%}⚑"
+ZSH_THEME_GIT_PROMPT_DIVERGED="%{$reset_color%}%{$fg_bright_bold[red]%}✗"
+ZSH_THEME_GIT_PROMPT_STAGED="%{$reset_color%}%{$fg_bright_bold[green]%}⚑"
+ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$reset_color%}%{$fg_bright_bold[yellow]%}⚑"
 
 
 
@@ -27,35 +51,39 @@ function precmd {
     local git_dir branch extra _INDEX _STATUS
 
     psvar=()
+    psvar[1]=""
+    if type node > /dev/null; then
+        psvar[2]="$(node -v)"
+    fi
     if test -d "$VIRTUAL_ENV"; then
-        psvar[1]="($(basename $VIRTUAL_ENV))"
+        psvar[3]="$(basename $VIRTUAL_ENV)"
     fi
     git_dir=$(git rev-parse --git-dir 2>/dev/null) || return
     extra=""
     if test -d "$git_dir/rebase-apply"; then
         if test -f "$git_dir/rebase-apply/rebasing"; then
-            psvar[4]="rebase"
+            psvar[6]="rebase"
         elif test -f "$git_dir/rebase-apply/applying"; then
-            psvar[4]="am"
+            psvar[6]="am"
         else
-            psvar[4]="am/rebase"
+            psvar[6]="am/rebase"
         fi
         branch="$(git symbolic-ref HEAD 2>/dev/null)"
     elif test -f "$git_dir/rebase-merge/interactive"; then
-        psvar[4]="rebase -i"
+        psvar[6]="rebase -i"
         branch="$(cat "$git_dir/rebase-merge/head-name")"
     elif test -d "$git_dir/rebase-merge"; then
-        psvar[4]="rebase -m"
+        psvar[6]="rebase -m"
         branch="$(cat "$git_dir/rebase-merge/head-name")"
     elif test -f "$git_dir/MERGE_HEAD"; then
-        psvar[4]="merge"
+        psvar[6]="merge"
         branch="$(git symbolic-ref HEAD 2>/dev/null)"
     else
         branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
             branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
             branch="$(cut -c1-7 "$git_dir/HEAD")..."
         if test -f "$git_dir/BISECT_LOG"; then
-            psvar[4]="bisect"
+            psvar[6]="bisect"
         else
             _INDEX=$(command git status --porcelain -b 2> /dev/null)
             if [[ -n "$_INDEX" ]]; then
@@ -87,8 +115,8 @@ function precmd {
     fi
 
 
-    psvar[2]="${branch#refs/heads/}"
-    psvar[3]=$_STATUS
+    psvar[4]="${branch#refs/heads/}"
+    psvar[5]=$_STATUS
 }
 
 
@@ -99,24 +127,28 @@ _my_prompt_setup() {
     local -a pcc
 
     rst="%{$reset_color%}"
-    main="%{$reset_color$fg_bold[blue]%}"
-    hour="%{$reset_color$fg_bold[yellow]%}"
-    path="%{$reset_color$fg_bold[cyan]%}"
-    gitpath="%{$reset_color$fg_bold[red]%}"
-    gitoperation="%{$reset_color$fg_bold[red]%}"
-    cursor="%{$reset_color$fg_bold[red]%}"
+    main="%{$reset_color$fg_bright_bold[blue]%}"
+    hour="%{$reset_color$fg_bright_bold[yellow]%}"
+    path="%{$reset_color$fg_bright_bold[cyan]%}"
+    gitpath="%{$reset_color$fg_bright_bold[red]%}"
+    gitoperation="%{$reset_color$fg_bright_bold[red]%}"
+    cursor="%{$reset_color$fg_bright_bold[red]%}"
     venv="%{$reset_color$fg_no_bold[yellow]%}"
+    python="%{$reset_color$fg_bright_bold[yellow]%}"
+    node="%{$reset_color$fg_bright_bold[green]%}"
     git="\$psvar[3]"
     PROMPT="\
-$main╭($hour%T$main)─%(2v.${gitpath}[%2v]%(4v.$gitoperation%4v.%(3v.$git .)).)$main─{$path%~$main}──
+$main╭($hour%T$main)─%(4v.${gitpath}[%4v]%(6v.$gitoperation%6v.%(5v.$git .)).)$main─{$path%~$main}──
 $main╰┤%{%(?..%S)%}%m%s$cursor ▶$rst "
-    RPROMPT="$venv %1v$rst"
+    RPROMPT="$venv %1v $node %2v $python %3v $rst"
     POSTEDIT=$reset_color
 }
 
 if [ $UID -eq 0 ]; then
-    PROMPT="%{$reset_color$fg_bold[yellow]%}[%{$fg_bold[red]%}%{%(?..%S)%}%n %m %s%{$fg_bold[yellow]%}%{$reset_color%} "
-    RPROMPT="%{$reset_color$fg_bold[yellow]%}(%{$fg_bold[red]%}%~%{$fg_bold[yellow]%})%{$reset_color%} "
+    PROMPT="%{$reset_color$fg_bright_bold[yellow]%}[%{$fg_bright_bold[red]%}%{%(?..%S)%}%n %m %s%{$fg_bright_bold[yellow]%}%{$reset_color%} "
+    RPROMPT="%{$reset_color$fg_bright_bold[yellow]%}(%{$fg_bright_bold[red]%}%~%{$fg_bright_bold[yellow]%})%{$reset_color%} "
+    POSTEDIT=$reset_color
+    export TERMINFO=/home/aurel/.local/kitty.app/lib/kitty/terminfo
 else
     _my_prompt_setup
 fi
@@ -132,8 +164,8 @@ case "$TERM" in
     ;;
     *);;
 esac
-vim_ins_mode="%{$fg[white]%}%{$fg_bold[blue]$bg[white]%} INSERT %{$reset_color%}"
-vim_cmd_mode="%{$fg[green]%}%{$fg_bold[black]$bg[green]%} COMMAND %{$reset_color%}"
+vim_ins_mode="%{$fg[white]%}%{$fg_bright_bold[blue]$bg[white]%} INSERT %{$reset_color%}"
+vim_cmd_mode="%{$fg[green]%}%{$fg_bright_bold[black]$bg[green]%} COMMAND %{$reset_color%}"
 vim_mode=$vim_ins_mode
 function zle-line-init zle-keymap-select {
     if [[ ${KEYMAP} == vicmd ]] ||
@@ -144,11 +176,7 @@ function zle-line-init zle-keymap-select {
            [[ ${KEYMAP} == viins ]] ||
            [[ ${KEYMAP} = '' ]] ||
            [[ $1 = 'beam' ]]; then
-      if test -d "$VIRTUAL_ENV"; then
-          psvar[1]="($(basename $VIRTUAL_ENV))"
-      else
-          psvar[1]=""
-      fi
+            psvar[1]=""
     fi
 
     echo -ne "\e[3 q"

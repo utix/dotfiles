@@ -21,14 +21,13 @@ beautiful.tooltip_fg = beautiful.fg_normal
 beautiful.tooltip_bg = beautiful.bg_normal
 local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
 local volume_widget   = require("awesome-wm-widgets.volume-widget.volume")
-local mic_widget   = require("awesome-wm-widgets.mic-widget.mic")
-local ssh_widget = require("sshagent")
+-- local mic_widget   = require("awesome-wm-widgets.mic-widget.mic")
+-- local ssh_widget = require("sshagent")
 -- Load Debian menu entries
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 
 -- Init all modules
-require('module.notifications')
 
 -- Mainly for Chrome notification
 naughty.config.defaults['icon_size'] = 70
@@ -42,11 +41,13 @@ naughty.config.defaults['fg'] = "#ffffff"
 --theme_path = "/home/aurel/.config/awesome/themes/theme.lua"
 theme_path = gears.filesystem.get_themes_dir() .. "default/theme.lua"
 beautiful.init(theme_path)
-beautiful.font = "DejaVu Sans 10"
+beautiful.font = "Cousine Regular Nerd 10"
+
 
 -- This is used later as the default terminal and editor to run.
-terminal = "roxterm"
+-- terminal = "roxterm"
 -- terminal = "terminator"
+terminal = "kitty"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -222,8 +223,8 @@ netwidget2 = wibox.container.margin(wibox.container.mirror(netgraph_widget2, { h
 vicious.register(dummytxt, vicious.widgets.net,
 function (widget, args)
     -- Update the graph
-    netgraph_widget:add_value(tonumber(args["{wlp61s0 down_kb}"]))
-    netgraph_widget2:add_value(tonumber(args["{wlp61s0 up_kb}"]))
+    netgraph_widget:add_value(tonumber(args["{wlp0s20f3 down_kb}"]))
+    netgraph_widget2:add_value(tonumber(args["{wlp0s20f3 up_kb}"]))
 end, 3)
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -238,12 +239,30 @@ awful.screen.connect_for_each_screen(function(s)
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(gears.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+    awful.button({ }, 1, function () awful.layout.inc( 1) end),
+    awful.button({ }, 3, function () awful.layout.inc(-1) end),
+    awful.button({ }, 4, function () awful.layout.inc( 1) end),
+    awful.button({ }, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+    s.mytaglist = awful.widget.taglist {
+      screen = s,
+      filter = awful.widget.taglist.filter.all,
+      buttons = taglist_buttons,
+      widget_template = {
+        {
+          {
+            id = 'text_role',
+            widget = wibox.widget.textbox,
+            align  = 'center',
+            forced_width = 20,
+          },
+          widget = wibox.container.margin,
+          layout = wibox.layout.fixed.horizontal,
+        },
+        id = 'background_role',
+        widget = wibox.container.background,
+      },
+    }
 
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
@@ -287,7 +306,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             --mykeyboardlayout,
-            ssh_widget,
+            --ssh_widget,
             battery_widget({
                 display_notification= true,
                 show_current_level=true,
@@ -296,7 +315,7 @@ awful.screen.connect_for_each_screen(function(s)
             }),
             volume_widget({display_notification = true}),
             spacer,
-            mic_widget,
+           -- mic_widget,
             spacer,
             mytextclock,
             weather_widget({
@@ -341,9 +360,15 @@ end
 
 
 -- {{{ Key bindings
+
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
+    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+              {description = "show main menu", group = "awesome"})
+    )
+
+globalkeys = gears.table.join( globalkeys,
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
@@ -363,9 +388,6 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
-
     awful.key({ modkey,    alt    }, "Left",
     function ()
         -- get current tag
@@ -410,8 +432,9 @@ globalkeys = gears.table.join(
                 client.focus:raise()
             end
         end,
-        {description = "go back", group = "client"}),
-
+        {description = "go back", group = "client"})
+    )
+globalkeys = gears.table.join( globalkeys,
     -- Standard program
     awful.key({ modkey,           }, "c", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
@@ -446,7 +469,9 @@ globalkeys = gears.table.join(
                       c:raise()
                   end
               end,
-              {description = "restore minimized", group = "client"}),
+              {description = "restore minimized", group = "client"})
+)
+globalkeys = gears.table.join( globalkeys,
   -- Brightness
   awful.key(
     {},
@@ -509,19 +534,21 @@ globalkeys = gears.table.join(
           end)
       end)
   end,
-  {description = "Display management auto", group = "function keys"}),
+  {description = "Display management auto", group = "function keys"})
+)
+globalkeys = gears.table.join( globalkeys,
 
   -- ALSA volume control
   awful.key(
     {},
     'XF86AudioRaiseVolume',
-    volume_widget.raise,
+    function() volume_widget:inc(5) end,
     {description = 'volume up', group = 'hotkeys'}
   ),
   awful.key(
     {},
     'XF86AudioLowerVolume',
-    volume_widget.lower,
+    function() volume_widget:dec(5) end,
     {description = 'volume down', group = 'hotkeys'}
   ),
   awful.key(
@@ -542,7 +569,7 @@ globalkeys = gears.table.join(
     {},
     'XF86PowerDown',
     function()
-      awful.spawn("gnome-screensaver-command -l")
+      awful.spawn("xscreensaver-command -lock")
     end,
     {description = 'lock the screen', group = 'hotkeys'}
   ),
@@ -550,7 +577,7 @@ globalkeys = gears.table.join(
     {modkey},
     'l',
     function()
-      awful.spawn("gnome-screensaver-command -l")
+      awful.spawn("xscreensaver-command -lock")
     end,
     {description = 'lock the screen', group = 'hotkeys'}
   ),
@@ -576,10 +603,10 @@ globalkeys = gears.table.join(
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
               end,
-              {description = "lua execute prompt", group = "awesome"}),
+              {description = "lua execute prompt", group = "awesome"})
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+--    awful.key({ modkey }, "p", function() menubar.show() end,
+--              {description = "show the menubar", group = "launcher"})
 )
 
 clientkeys = gears.table.join(
@@ -688,6 +715,7 @@ clientbuttons = gears.table.join(
 
 -- Set keys
 root.keys(globalkeys)
+-- root.keys({})
 -- }}}
 
 -- {{{ Rules
@@ -815,7 +843,7 @@ end)
 
 client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
-    if c.class == "URxvt" or c.class == "Roxterm" then
+    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" then
         c.opacity = 0.9
     else
         c.opacity = 1
@@ -823,7 +851,7 @@ client.connect_signal("focus", function(c)
 end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
-    if c.class == "URxvt" or c.class == "Roxterm" then
+    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" then
         c.opacity = 0.7
     end
 end)
@@ -846,17 +874,19 @@ function load_prog(tag, cmd)
     end
 end
 --awful.spawn('gnome-panel')
-awful.spawn('xcompmgr')
+awful.spawn('picom')
 awful.spawn('nm-applet')
 awful.spawn('slack')
-awful.spawn('parcellite')
+awful.spawn('copyq')
 -- Reverse scroll for touchpad
 -- xinput list-props to find the values
-awful.spawn('xinput set-prop 10 314 0')
+--awful.spawn('xinput set-prop 10 314 0')
+-- emulate middle click
+awful.spawn('xinput set-prop 12 344 0')
 -- Remove middle click on the touchpad
-awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
--- awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
+--awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
+awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
 load_prog(2, {terminal, terminal, terminal})
-load_prog(8, "google-chrome --profile-directory='Profile 1'")
-load_prog(9, {"google-chrome --profile-directory='Default'", "keepass2"})
+load_prog(8, "google-chrome --profile-directory='Profile 2'")
+load_prog(9, {"google-chrome --profile-directory='Profile 1'", "keepass2"})

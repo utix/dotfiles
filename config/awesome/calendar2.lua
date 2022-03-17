@@ -16,8 +16,8 @@ local capi = {
 }
 local awful = require("awful")
 local naughty = require("naughty")
-module("calendar2")
-
+--module("calendar2")
+local M = {}
 local calendar = {}
 local current_day_format = "<u>%s</u>"
 local locales = {'America/Los_Angeles', 'Europe/Paris', 'Australia/Melbourne', 'Asia/Shanghai'}
@@ -75,7 +75,7 @@ function switchNaughtyMonth(switchMonths)
         calendar[3].box.widgets[1].image = capi.image("/home/aurel/.config/awesome/themes/"..locale..".png")
 end
 
-function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
+function M.addCalendarToWidget(mywidget, io_master, custom_current_day_format)
   io_m = io_master
   if custom_current_day_format then current_day_format = custom_current_day_format end
 
@@ -139,3 +139,4 @@ function addCalendarToWidget(mywidget, io_master, custom_current_day_format)
   ))
 end
 
+return M

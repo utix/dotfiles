@@ -1,21 +1,20 @@
 local awful = require("awful")
 local awful = require("awful")
 local naughty = require("naughty")
-module("sshagent")
 local popup
 local alert = true
 local io
 local image
 local key_check
 
-
+local M = {}
 function get_k()
     local f = io.popen('ssh-add -l')
     local l = f:read()
 
     return l
 end
-function addAgentToWidget(mywidget, io_master, image_master)
+function M.addAgentToWidget(mywidget, io_master, image_master)
     image = image_master
     io = io_master
     mywidget:add_signal('mouse::enter', function ()
@@ -52,4 +51,4 @@ function addAgentToWidget(mywidget, io_master, image_master)
     awful.hooks.timer.register(30, key_check)
     key_check()
 end
-
+return M

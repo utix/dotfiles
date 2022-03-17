@@ -11,7 +11,6 @@ export CCACHE_DIR="$HOME/.cache/ccache"
 export CCACHE_NOCOMPRESS=NoThanks
 export CCACHE_HARDLINK=YesPlease
 
-export BROWSER=chromium-browser
 
 export LC_MESSAGES=C
 unset  LC_ALL
@@ -19,6 +18,9 @@ unset  VERBOSE
 
 if [ $UID -eq 0 ]; then
     PATH=~root/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+    if test ! -n TERMINFO; then
+        export TERMINFO=/home/aurel/.local/kitty.app/lib/kitty/terminfo
+    fi
 else
     PATH="${HOME}/local/bin:/usr/lib/ccache:${HOME}/bin:${PATH}"
     LD_LIBRARY_PATH="${HOME}/local/lib"
@@ -26,7 +28,9 @@ fi
 
 export WORKON_HOME=$HOME/.virtualenvs
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-source /usr/local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=/home/aurel/.local/bin/virtualenv
+source /home/aurel/.local/bin/virtualenvwrapper.sh
 export M3_HOME=/opt/apache-maven-3.3.9
 export M3=$M3_HOME/bin
 export PATH=$M3:$PATH
