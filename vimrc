@@ -144,7 +144,7 @@ au FileType typescript map <F2> <Plug>(coc-definition)
 au FileType typescript nmap <silent> gy <Plug>(coc-type-definition)
 au FileType typescript nmap <silent> gi <Plug>(coc-implementation)
 au FileType typescript nmap <silent> gr <Plug>(coc-references)
-set tagfunc=CocTagFunc
+au FileType typescript set tagfunc=CocTagFunc
 map <C-Left> <C-w><Left>
 map! <C-Left> <Esc> <C-w><Left>
 if &term == "rxvt-unicode"
