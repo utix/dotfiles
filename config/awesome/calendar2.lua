@@ -16,9 +16,11 @@ local capi = {
 }
 local awful = require("awful")
 local naughty = require("naughty")
+local gears = require("gears")
 --module("calendar2")
-local M = {}
-local calendar = {}
+local M = {
+  calendar = {1, 2, 3}
+}
 local current_day_format = "<u>%s</u>"
 local locales = {'America/Los_Angeles', 'Europe/Paris', 'Australia/Melbourne', 'Asia/Shanghai'}
 local locale_pos = 4 -- Set China as current default
@@ -67,35 +69,68 @@ function displayMonth(month,year,weekStart)
         return header .. "\n\n" .. lines
 end
 
-function switchNaughtyMonth(switchMonths)
-        if (#calendar < 3) then return end
-        local swMonths = switchMonths or 1
-        calendar[1] = calendar[1] + swMonths
-        calendar[3].box.widgets[2].text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(calendar[1], calendar[2], 2))
-        calendar[3].box.widgets[1].image = capi.image("/home/aurel/.config/awesome/themes/"..locale..".png")
+function M.switchNaughtyMonth(self, switchMonths)
+        naughty.notify({
+                text = "coucou feature"
+              })
+       if (#self.calendar < 3) then return end
+       local swMonths = switchMonths or 1
+       self.calendar[1] = self.calendar[1] + swMonths
+       self.calendar[3].box.widgets[2].text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(M.calendar[1], M.calendar[2], 2))
+       self.calendar[3].box.widgets[1].image = capi.image("/home/aurel/.config/awesome/themes/"..locale..".png")
 end
 
-function M.addCalendarToWidget(mywidget, io_master, custom_current_day_format)
+function M.addCalendarToWidget(self, mywidget, io_master, custom_current_day_format)
   io_m = io_master
   if custom_current_day_format then current_day_format = custom_current_day_format end
-
-  mywidget:add_signal('mouse::enter', function ()
+  mywidget.calendar = M.calendar
+  mywidget:connect_signal('mouse::enter', function (s)
         local month, year = os.date('%m'), os.date('%Y')
-        calendar = { month, year,
+        s.calendar = { month, year,
         naughty.notify({
                 text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(month, year, 2, locale)),
                 icon="/home/aurel/.config/awesome/themes/"..locale..".png",
                 timeout = 0,
                 hover_timeout = 0.5,
+                position="top_right",
                 screen = capi.mouse.screen
         })
   }
   end)
-  mywidget:add_signal('mouse::leave', function () naughty.destroy(calendar[3]) end)
+  mywidget:connect_signal('mouse::leave', function () naughty.destroy(self.calendar[3]) end)
+  mywidget:connect_signal("button::press", function(s, lx, ly, button, mods, metadata)
+    naughty.notify({
+      text = "press cal".. s.calendar[1]
+    })
+  end)
+  mywidget:connect_signal("button::press",
+    function(_, _, _, button, mods)
+      naughty.notify({
+        text = "press" .. button
+      })
+        if button == 1 then
+        self:switchNaughtyMonth(-1)
+        end
+        if button == 3 then
+       --   switchNaughtyMonth(1)
+        naughty.notify({
+                text = "coucou"
+              })
+        end
+      naughty.notify({
+        text = "press2"
+      })
+        naughty.notify({
+                text = "coucou"
+              })
+    end)
 
-  mywidget:buttons(awful.util.table.join(
+  mywidget:buttons(gears.table.join(
     awful.button({ }, 1, function()
-        switchNaughtyMonth(-1)
+        naughty.notify({
+                text = "foufou"
+              })
+        --switchNaughtyMonth(-1)
     end),
     awful.button({'Control' }, 1, function()
         if locale_pos < #locales then
