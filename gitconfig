@@ -27,8 +27,8 @@
 	new = cyan
 
 [user]
-       name  = Aurélien LAJOIE
-       email = <aurelien.lajoie@utix.fr>
+       name  = Aurelien LAJOIE
+       email = <aurelien.lajoie@kili-technology.com>
 
 [color]
         branch = true
@@ -74,5 +74,3 @@
     program = gpg2
 [push]
     default = upstream
-[init]
-    templateDir = /home/aurelienl/.git-template

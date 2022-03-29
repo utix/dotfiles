@@ -23,6 +23,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'Xuyuanp/nerdtree-git-plugin'
     Plug 'cespare/vim-toml'
     Plug 'prashanthellina/follow-markdown-links'
+    Plug 'pangloss/vim-javascript'    " JavaScript support
+    Plug 'leafgarland/typescript-vim' " TypeScript syntax
+    Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
+    Plug 'jparise/vim-graphql'        " GraphQL syntax
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'TypeScript', 'lua', 'vim' ]}
+
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
 call plug#end()
@@ -65,6 +71,8 @@ set wildmode=longest,full
 set clipboard=unnamed          "used klipper for paste
 set grepprg=git\ grep\ -n
 
+autocmd FileType markdown nnoremap <script> <CR> :FollowLink<CR>
+autocmd FileType markdown nnoremap <script> <BS> :e#<CR>
 augroup tw_auto_commands
     autocmd!
     autocmd InsertEnter * highlight OverLength cterm=bold,underline ctermbg=black ctermfg=NONE
@@ -115,6 +123,11 @@ let c_gnu=1
 let c_space_errors=1
 let c_no_curly_errors=1
 
+au FileType typescript let g:coc_global_extensions = ['coc-tsserver']
+au FileType javascript let g:coc_global_extensions = ['coc-tsserver']
+au FileType typescript execute "CocEnable"
+au FileType javascript execute "CocEnable"
+
 " IOP
 au BufRead,BufNewFile *.iop setf d
 set et sts=4 sw=4
@@ -126,6 +139,12 @@ noremap <F1>   :nohls<cr>
 map! <F1>  <C-o>:nohls<cr>
 map <F2> <C-]>
 map g<F2> g<C-]>
+au FileType typescript nmap <silent> gd <Plug>(coc-definition)
+au FileType typescript map <F2> <Plug>(coc-definition)
+au FileType typescript nmap <silent> gy <Plug>(coc-type-definition)
+au FileType typescript nmap <silent> gi <Plug>(coc-implementation)
+au FileType typescript nmap <silent> gr <Plug>(coc-references)
+set tagfunc=CocTagFunc
 map <C-Left> <C-w><Left>
 map! <C-Left> <Esc> <C-w><Left>
 if &term == "rxvt-unicode"
