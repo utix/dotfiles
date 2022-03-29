@@ -136,7 +136,7 @@ _my_prompt_setup() {
     venv="%{$reset_color$fg_no_bold[yellow]%}"
     python="%{$reset_color$fg_bright_bold[yellow]%}"
     node="%{$reset_color$fg_bright_bold[green]%}"
-    git="\$psvar[3]"
+    git="\$psvar[5]"
     PROMPT="\
 $main╭($hour%T$main)─%(4v.${gitpath}[%4v]%(6v.$gitoperation%6v.%(5v.$git .)).)$main─{$path%~$main}──
 $main╰┤%{%(?..%S)%}%m%s$cursor ▶$rst "
