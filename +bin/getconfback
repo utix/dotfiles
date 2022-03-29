@@ -6,6 +6,6 @@ dot_cp() {
     cp "$HOME/$2" "$1"
 }
 
-find $dotfiles -mindepth 1 \( -name '[+.]*' -prune -o -not -type d -type f -print \) | while read f; do
+find $dotfiles -mindepth 1 \( -name '[+.]*' -prune -o -not -type d -type f  ! -name README.md -print \) | while read f; do
     dot_cp "$f" ".${f#$dotfiles/}"
 done

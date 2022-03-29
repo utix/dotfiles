@@ -15,7 +15,7 @@ done
 #    dot_ln "$d" "${d#$dotfiles/+}"
 #done
 
-find $dotfiles -mindepth 1 \( -name '[+.]*' -prune -o -not -type d -print \) | while read f; do
+find $dotfiles -mindepth 1 \( -name '[+.]*' -prune -o -not -type d  ! -name README.md -print \) | while read f; do
     rm -f "$HOME/.${f#$dotfiles/}"
     dot_cp "$f" ".${f#$dotfiles/}"
 done
