@@ -52,38 +52,44 @@ function precmd {
 
     psvar=()
     psvar[1]=""
+    psvar[2]=""
+    psvar[3]=""
+    psvar[4]=""
     if type node > /dev/null; then
         psvar[2]="$(node -v)"
     fi
     if test -d "$VIRTUAL_ENV"; then
-        psvar[3]="$(basename $VIRTUAL_ENV)"
+        psvar[3]=" $(basename $VIRTUAL_ENV)"
+    fi
+    if type rvm > /dev/null; then
+        psvar[4]=" $(rvm current)"
     fi
     git_dir=$(git rev-parse --git-dir 2>/dev/null) || return
     extra=""
     if test -d "$git_dir/rebase-apply"; then
         if test -f "$git_dir/rebase-apply/rebasing"; then
-            psvar[6]="rebase"
+            psvar[7]="rebase"
         elif test -f "$git_dir/rebase-apply/applying"; then
-            psvar[6]="am"
+            psvar[7]="am"
         else
-            psvar[6]="am/rebase"
+            psvar[7]="am/rebase"
         fi
         branch="$(git symbolic-ref HEAD 2>/dev/null)"
     elif test -f "$git_dir/rebase-merge/interactive"; then
-        psvar[6]="rebase -i"
+        psvar[7]="rebase -i"
         branch="$(cat "$git_dir/rebase-merge/head-name")"
     elif test -d "$git_dir/rebase-merge"; then
-        psvar[6]="rebase -m"
+        psvar[7]="rebase -m"
         branch="$(cat "$git_dir/rebase-merge/head-name")"
     elif test -f "$git_dir/MERGE_HEAD"; then
-        psvar[6]="merge"
+        psvar[7]="merge"
         branch="$(git symbolic-ref HEAD 2>/dev/null)"
     else
         branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
             branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
             branch="$(cut -c1-7 "$git_dir/HEAD")..."
         if test -f "$git_dir/BISECT_LOG"; then
-            psvar[6]="bisect"
+            psvar[7]="bisect"
         else
             _INDEX=$(command git status --porcelain -b 2> /dev/null)
             if [[ -n "$_INDEX" ]]; then
@@ -115,8 +121,8 @@ function precmd {
     fi
 
 
-    psvar[4]="${branch#refs/heads/}"
-    psvar[5]=$_STATUS
+    psvar[5]="${branch#refs/heads/}"
+    psvar[6]=$_STATUS
 }
 
 
@@ -135,12 +141,13 @@ _my_prompt_setup() {
     cursor="%{$reset_color$fg_bright_bold[red]%}"
     venv="%{$reset_color$fg_no_bold[yellow]%}"
     python="%{$reset_color$fg_bright_bold[yellow]%}"
+    ruby="%{$reset_color$fg_bright_bold[red]%}"
     node="%{$reset_color$fg_bright_bold[green]%}"
-    git="\$psvar[5]"
+    git="\$psvar[6]"
     PROMPT="\
-$main╭($hour%T$main)─%(4v.${gitpath}[%4v]%(6v.$gitoperation%6v.%(5v.$git .)).)$main─{$path%~$main}──
+$main╭($hour%T$main)─%(5v.${gitpath}[%5v]%(7v.$gitoperation%7v.%(6v.$git .)).)$main─{$path%~$main}──
 $main╰┤%{%(?..%S)%}%m%s$cursor ▶$rst "
-    RPROMPT="$venv %1v $node %2v $python %3v $rst"
+    RPROMPT="$venv%1v$node%2v$python%3v$ruby%4v$rst"
     POSTEDIT=$reset_color
 }
 

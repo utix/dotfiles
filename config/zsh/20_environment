@@ -34,7 +34,13 @@ source /home/aurel/.local/bin/virtualenvwrapper.sh
 export M3_HOME=/opt/apache-maven-3.3.9
 export M3=$M3_HOME/bin
 export PATH=$M3:$PATH
+if [ -n "$DESKTOP_SESSION" ]; then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+fi
+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+source "/etc/profile.d/rvm.sh"
