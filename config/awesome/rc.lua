@@ -43,6 +43,7 @@ naughty.config.defaults['fg'] = "#ffffff"
 theme_path = gears.filesystem.get_themes_dir() .. "default/theme.lua"
 beautiful.init(theme_path)
 beautiful.font = "Cousine Regular Nerd 10"
+beautiful.taglist_font = "FiraCode Nerd Font Medium 10"
 
 
 -- This is used later as the default terminal and editor to run.
@@ -244,7 +245,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "", "", "", "4", "5", "6", "7", "", "" }, s, awful.layout.layouts[1])
+    awful.tag({ "", "", "", "", "", "", "", "", "" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -507,7 +508,7 @@ globalkeys = gears.table.join( globalkeys,
     end,
     {description = '-5%', group = 'hotkeys'}
   ),
-  awful.key({}, "XF86Display",
+  awful.key({modkey}, "p",
   function ()
       -- Command to get list of other screens and best mode
       -- hack to handle when monitors mode are not sorted, like my TV does.
