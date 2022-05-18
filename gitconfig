@@ -50,6 +50,7 @@
         verbosity = 1
         conflictstyle = diff3
         stat = true
+	tool = kdiff3
 
 [push]
     default = tracking
@@ -69,7 +70,7 @@
 [core]
     pager = less -x1,5
 [commit]
-    gpgsign = true
+    gpgsign = false
 [gpg]
     program = gpg2
 [push]

@@ -18,6 +18,7 @@ local cpuwidget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 local ramwidget = require("awesome-wm-widgets.ram-widget.ram-widget")
 local logout_popup = require("awesome-wm-widgets.logout-popup-widget.logout-popup")
 local weather_widget = require("awesome-wm-widgets.weather-widget.weather")
+local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 beautiful.tooltip_fg = beautiful.fg_normal
 beautiful.tooltip_bg = beautiful.bg_normal
 local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
@@ -139,7 +140,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
-local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 
 local cmus_widget = require('awesome-wm-widgets.cmus-widget.cmus')
 local cw = calendar_widget({
@@ -150,9 +150,7 @@ local cw = calendar_widget({
     previous_month_button = 1,
     next_month_button = 3,
 })
-mytextclock:connect_signal("mouse::enter", cw.toggle)
-mytextclock:connect_signal("mouse::leave", cw.toggle)
-mytextclock:buttons(cw.buttons)
+mytextclock:connect_signal("button::press", cw.toggle)
 -- Initialize widget
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -334,15 +332,25 @@ awful.screen.connect_for_each_screen(function(s)
             spacer,
             mytextclock,
             weather_widget({
-               -- api_key = '4be65c6368d87c8154a3d9640545d700',
+                api_key = '40ac861f37e19d2987d30da660e15c15',
+                -- Bordeaux
                 coordinates = {44.8297308377727, -0.5853479533975233},
                 units = 'metric',
                 show_hourly_forecast = true,
                 show_daily_forecast = true,
+                timeout = 600,
               }),
-            logout_popup.widget{onlock= function()
-              awful.spawn("xscreensaver-command -lock")
-            end },
+            logout_popup.widget{
+              onlock = function()
+                awful.spawn("xdg-screensaver lock")
+                --awful.spawn("gnome-screensaver-command -l")
+              end,
+              onsuspend = function()
+                --awful.spawn.with_shell("gnome-screensaver-command -l")
+                awful.spawn("xdg-screensaver lock")
+                awful.spawn.with_shell("\\sudo /usr/sbin/pm-suspend")
+              end,
+            },
             s.mylayoutbox,
         },
     }
@@ -588,7 +596,7 @@ globalkeys = gears.table.join( globalkeys,
     {},
     'XF86PowerDown',
     function()
-      awful.spawn("xscreensaver-command -lock")
+      awful.spawn("gnome-screensaver-command -l")
     end,
     {description = 'lock the screen', group = 'hotkeys'}
   ),
@@ -596,7 +604,7 @@ globalkeys = gears.table.join( globalkeys,
     {modkey},
     'l',
     function()
-      awful.spawn("xscreensaver-command -lock")
+      awful.spawn("gnome-screensaver-command -l")
     end,
     {description = 'lock the screen', group = 'hotkeys'}
   ),
@@ -862,7 +870,7 @@ end)
 
 client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
-    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" then
+    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" or c.class == "Alacritty" then
         c.opacity = 0.9
     else
         c.opacity = 1
@@ -870,7 +878,7 @@ client.connect_signal("focus", function(c)
 end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
-    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" then
+    if c.class == "kitty" or c.class == "URxvt" or c.class == "Roxterm" or c.class == "Alacritty" then
         c.opacity = 0.7
     end
 end)
@@ -901,11 +909,15 @@ awful.spawn('copyq')
 -- xinput list-props to find the values
 --awful.spawn('xinput set-prop 10 314 0')
 -- emulate middle click
-awful.spawn('xinput set-prop 12 344 0')
+-- awful.spawn('xinput set-prop 12 344 0')
 -- Remove middle click on the touchpad
 --awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
-awful.spawn.with_shell('pkill xscreensaver ; xscreensaver -no-splash &')
+awful.spawn.with_shell('pkill gnome-screensaver ; gnome-screensaver &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
 --load_prog(2, {terminal, terminal, terminal})
 load_prog(8, "google-chrome --profile-directory='Profile 2'")
 load_prog(9, {"google-chrome --profile-directory='Profile 1'", "keepass2"})
+
+-- 🗑️Garbage Collector Settings
+collectgarbage("setpause", 110)
+collectgarbage("setstepmul", 1000)

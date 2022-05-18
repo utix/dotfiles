@@ -6,7 +6,7 @@ autoload colors && colors
 setopt extended_glob
 local lc=$'\e[' rc=m bold="01;" # Standard ANSI terminal escape values
 
-typeset -Ag bright_colour fg_bright_bold
+typeset -Ag bright_colour fg_bright_bold fg_bright
 bright_colour=(
   black   90
   red     91
@@ -27,6 +27,17 @@ fg_bright_bold=(
   cyan    "$lc$bold$bright_colour[cyan]$rc"
   white   "$lc$bold$bright_colour[white]$rc"
 )
+fg_bright=(
+  black   "$lc$bright_colour[black]$rc"
+  red     "$lc$bright_colour[red]$rc"
+  green   "$lc$bright_colour[green]$rc"
+  yellow  "$lc$bright_colour[yellow]$rc"
+  blue    "$lc$bright_colour[blue]$rc"
+  magenta "$lc$bright_colour[magenta]$rc"
+  cyan    "$lc$bright_colour[cyan]$rc"
+  white   "$lc$bright_colour[white]$rc"
+)
+
 
 
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$reset_color%}%{$fg[green]%}▲"
@@ -139,10 +150,10 @@ _my_prompt_setup() {
     gitpath="%{$reset_color$fg_bright_bold[red]%}"
     gitoperation="%{$reset_color$fg_bright_bold[red]%}"
     cursor="%{$reset_color$fg_bright_bold[red]%}"
-    venv="%{$reset_color$fg_no_bold[yellow]%}"
-    python="%{$reset_color$fg_bright_bold[yellow]%}"
-    ruby="%{$reset_color$fg_bright_bold[red]%}"
-    node="%{$reset_color$fg_bright_bold[green]%}"
+    venv="%{$reset_color$fg_bold[yellow]%}"
+    python="%{$reset_color$fg_bold[yellow]%}"
+    ruby="%{$reset_color$fg_bold[red]%}"
+    node="%{$reset_color$fg_bright[green]%}"
     git="\$psvar[6]"
     PROMPT="\
 $main╭($hour%T$main)─%(5v.${gitpath}[%5v]%(7v.$gitoperation%7v.%(6v.$git .)).)$main─{$path%~$main}──
