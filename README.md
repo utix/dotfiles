@@ -19,3 +19,17 @@ To see wifi signal strength
 ```
 nmcli dev wifi
 ```
+
+## Printer Cannon MG 5200
+
+[follow the doc](https://medium.com/@domdomegg/installing-canon-mg5200-series-drivers-on-ubuntu-20-04-868bfa0e2ac5)
+
+
+## Zoom too big on 4k screen:
+Setting `autoScale=false` in ~/.config/zoomus.conf
+
+￼
+## dmesg restricted for user
+```
+sudo sysctl kernel.dmesg_restrict=0
+```
