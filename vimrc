@@ -359,6 +359,8 @@ exec <SID>myhi("Search",             "NONE",       "black", "darkblue")
 exec <SID>myhi("SearchCurrent", "underline",      "yellow", "darkgrey")
 
 exec <SID>myhi("NonText",            "NONE",    "darkgray", "NONE")
+exec <SID>myhi("CursorColumn",       "NONE",    "NONE",     "darkgray")
+
 
 exec <SID>myhi("SpellBad",           "bold",       "white", "red")
 exec <SID>myhi("SpellCap",           "NONE",    "lightred", "NONE")
@@ -434,6 +436,7 @@ if has("gui_running") || &t_Co >= 88
     exec <SID>myhi("PmenuThumb",   "NONE",     "3f3f7f",   "3f3f7f")
 
     exec <SID>myhi("ColorColumn",  "bold",      "NONE",    "202020")
+    exec <SID>myhi("CursorColumn", "bold",      "NONE",    "202020")
 
 
     " diff
