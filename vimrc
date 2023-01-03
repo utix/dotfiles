@@ -22,12 +22,15 @@ call plug#begin('~/.vim/plugged')
     Plug 'ryanoasis/vim-devicons'
     Plug 'Xuyuanp/nerdtree-git-plugin'
     Plug 'cespare/vim-toml'
-    Plug 'prashanthellina/follow-markdown-links'
     Plug 'pangloss/vim-javascript'    " JavaScript support
     Plug 'leafgarland/typescript-vim' " TypeScript syntax
     Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
     Plug 'jparise/vim-graphql'        " GraphQL syntax
-    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'TypeScript', 'lua', 'vim' ]}
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'typescript', 'TypeScript', 'lua', 'vim' ]}
+    Plug 'prashanthellina/follow-markdown-links'
+    Plug 'ekalinin/Dockerfile.vim'
+    Plug 'nvie/vim-flake8'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
@@ -37,6 +40,7 @@ let g:go_template_autocreate = 0
 set tags=tags;/,.tags;/,TAGS;/
 exe "set path=." . system("echo | cpp -v 2>&1 | grep '^ .*/include' | tr -d \"\n\" | tr \" \" \",\"")
 set path+=.;/
+let g:coc_disable_startup_warning = 1
 
 set laststatus=2                " show status line?  Yes, always!
 if v:version >= 703
@@ -71,8 +75,6 @@ set wildmode=longest,full
 set clipboard=unnamed          "used klipper for paste
 set grepprg=git\ grep\ -n
 
-autocmd FileType markdown nnoremap <script> <CR> :FollowLink<CR>
-autocmd FileType markdown nnoremap <script> <BS> :e#<CR>
 augroup tw_auto_commands
     autocmd!
     autocmd InsertEnter * highlight OverLength cterm=bold,underline ctermbg=black ctermfg=NONE
