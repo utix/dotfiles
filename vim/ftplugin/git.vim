@@ -26,8 +26,11 @@
 "                 <Leader>gd   - view the diff in a hsplit
 "                 <Leader>ghd  - view the diff in a hsplit
 "                 <Leader>gvd  - view the diff in a vsplit
-"========================================================================={{{=
+"==========================================================================
 
+if expand('%:t') != 'COMMIT_EDITMSG'
+    finish
+endif
 if exists("b:did_ftplugin") | finish | endif
 
 let b:did_ftplugin = 1
@@ -67,4 +70,14 @@ if exists("g:git_diff_spawn_mode")
     endif
 endif
 
-" }}}
+inoreabbrev <buffer> BB BREAKING CHANGE:
+if (strlen(getline(1)) == 0)
+    nnoremap    <buffer> i  i<C-r>=<sid>commit_type()<CR>
+endif
+
+fun! s:commit_type()
+  call complete(1, ['build: ', 'chore: ', 'ci: ', 'docs: ', 'feat: ',
+              \ 'fix: ', 'perf: ', 'refactor: ', 'revert: ', 'style: ', 'test: '])
+  nunmap <buffer> i
+  return ''
+endfun
