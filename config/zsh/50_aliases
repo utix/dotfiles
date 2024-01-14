@@ -40,4 +40,3 @@ alias v=vim
 cvi () {
     vim -O ${${1%.[hc]}%.}.{h,c}
 }
-alias mvn="rainbow --config=mvn3 -- mvn"

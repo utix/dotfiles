@@ -19,7 +19,11 @@ _my_main () {
     fi
 
     for zshrc_snipplet in ~/.config/zsh/[0-9][0-9][^.]#; do
+        START=$(date +%s.%N)
         source $zshrc_snipplet
+        END=$(date +%s.%N)
+        DIFF=$(echo "$END - $START" | bc)
+#        echo $zshrc_snipplet $DIFF
     done
 }
 _my_main

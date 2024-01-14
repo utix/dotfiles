@@ -508,6 +508,7 @@ globalkeys = gears.table.join( globalkeys,
     end,
     {description = '+5%', group = 'hotkeys'}
   ),
+  -- not working ? Add your user to the video group
   awful.key(
     {},
     'XF86MonBrightnessDown',
@@ -904,7 +905,7 @@ end
 awful.spawn('picom')
 awful.spawn('nm-applet')
 awful.spawn('slack')
-awful.spawn('copyq')
+awful.spawn.with_shell('QT_AUTO_SCREEN_SCALE_FACTOR=1 copyq')
 -- Reverse scroll for touchpad
 -- xinput list-props to find the values
 --awful.spawn('xinput set-prop 10 314 0')
@@ -912,8 +913,10 @@ awful.spawn('copyq')
 -- awful.spawn('xinput set-prop 12 344 0')
 -- Remove middle click on the touchpad
 --awful.spawn('xinput set-button-map 10 1 0 3 4 5 6 7')
+awful.spawn.with_shell('/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &')
 awful.spawn.with_shell('pkill gnome-screensaver ; gnome-screensaver &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
+awful.spawn.with_shell('autolock.sh &')
 --load_prog(2, {terminal, terminal, terminal})
 load_prog(8, "google-chrome --profile-directory='Profile 2'")
 load_prog(9, {"google-chrome --profile-directory='Profile 1'", "keepass2"})

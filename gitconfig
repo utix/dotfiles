@@ -12,20 +12,35 @@
     squash=commit -s --amend -C HEAD
     amend=commit -s --amend
     post-review=send-email --no-chain-reply-to --suppress-cc all --suppress-from --no-signed-off-by-cc --annotate --compose --to corp.software.review@news.intersec.com -C -C -M
-    lg=log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    lg=log --graph --decorate --pretty=format:'%C(brightred)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
     workdir = !sh /usr/share/doc/git/contrib/workdir/git-new-workdir
     pushd = push -u origin HEAD
+    fixup = "!git log -n 10 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
+	scrub = reset --hard @{upstream}
+	pushy = push --force-with-lease
 
 [pager]
 	color = true
+  diff = diff-so-fancy | less --tabs=4 -RFX
+  show = diff-so-fancy | less --tabs=4 -RFX
 [diff]
-	color = auto
+    color = auto
+    algorithm = histogram
+    colorMoved = dimmed-zebra
 [diff "color"]
 	meta = green
 	frag = yellow
 	old = magenta
 	new = cyan
+	whitespace = red reverse
+[color "diff-highlight"]
+	oldNormal = red
+	oldHighlight = 9 ul 52
+	newNormal = green
+	newHighlight = 10 ul 22
 
+[tig "color"]
+	cursor		= default	yellow bold
 [user]
        name  = Aurelien LAJOIE
        email = <aurelien.lajoie@kili-technology.com>
@@ -34,6 +49,7 @@
         branch = true
         status = true
         grep   = true
+	ui = true
 
 [color "status"]
         header = bold blue
@@ -41,10 +57,13 @@
         changed = bold red
         untracked = yellow
 [color "diff"]
-       meta = green
-       frag = yellow
-       old = magenta
-       new = bold cyan
+	meta = 11
+	frag = yellow dim
+	old = red bold
+	new = green bold
+	func = brightyellow
+	commit = yellow bold
+	whitespace = red reverse
 
 [merge]
         verbosity = 1
@@ -52,8 +71,6 @@
         stat = true
 	tool = kdiff3
 
-[push]
-    default = tracking
 
 [grep]
     lineNumber = true
@@ -75,3 +92,9 @@
     program = gpg2
 [push]
     default = upstream
+	autoSetupRemote = true
+
+[diff-so-fancy]
+	stripLeadingSymbols = false
+[url "https://github"]
+	insteadOf = git://github

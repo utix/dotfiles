@@ -31,6 +31,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'ekalinin/Dockerfile.vim'
     Plug 'nvie/vim-flake8'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    Plug 'vim-syntastic/syntastic'
+    Plug 'https://gitlab.com/gi1242/vim-emoji-ab'
 
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
@@ -147,6 +149,8 @@ au FileType typescript nmap <silent> gy <Plug>(coc-type-definition)
 au FileType typescript nmap <silent> gi <Plug>(coc-implementation)
 au FileType typescript nmap <silent> gr <Plug>(coc-references)
 au FileType typescript set tagfunc=CocTagFunc
+au FileType typescript nnoremap <C-t> <C-o>
+
 map <C-Left> <C-w><Left>
 map! <C-Left> <Esc> <C-w><Left>
 if &term == "rxvt-unicode"
@@ -186,6 +190,7 @@ au FileType java set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn
 au FileType pom  set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn\ $*
 autocmd FileType go no <F11> :GoRun<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
+runtime macros/emoji-ab.vim
 
 " next compilation error
 map +        :cnext<cr>
@@ -489,7 +494,7 @@ call pathogen#infect()
 " syntastic {{{
 let g:syntastic_mode_map = { 'mode': 'inactive',
                          \ 'passive_filetypes': [ 'python', 'sh', 'php', 'javascript', 'java', 'cpp', 'c' ],
-                         \ 'active_filetypes': [ ] }
+                         \ 'active_filetypes': [ 'yaml' ] }
 let g:syntastic_ignore_files = ['^/usr/include/']
 let g:syntastic_auto_loc_list=1
 let g:syntastic_auto_jump=0
@@ -511,6 +516,8 @@ let g:syntastic_cpp_no_default_include_dirs = 1
 let g:syntastic_python_checkers = ['pylint']
 
 let g:syntastic_php_checkers = ['php', 'phpmd', 'phpcs']
+let g:syntastic_yaml_checkers = ['yamllint']
+
 " let :E :Explore (syntastic defines an Errors command which makes :E
 " ambiguous)
 command! -nargs=* -bar -bang -count=0 -complete=dir E Explore <args>
@@ -547,7 +554,7 @@ function! MyFoldText()
     endif
     let w = 78 - &foldcolumn - (&number ? 8 : 0)
     let line = getline(v:foldstart)
-    let comment = substitute(line, '^\W\+\|{{{\d\=\|\W\+$', '', 'g')
+    let comment = substitute(line, '^\W\+\|{{{\|\W\+$', '', 'g')
     let foldLevelStr = repeat("═", v:foldlevel - 1)
     let expansionString ='╞'.repeat("═", w - 4 - strwidth(nblines.comment.foldLevelStr)).'╡'
     let txt = '╚'.foldLevelStr . '╡' . comment . expansionString . nblines

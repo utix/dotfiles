@@ -16,7 +16,7 @@ zstyle ':completion:*' group 1
 zstyle ':completion:*' format '%B---- %d%b'
 zstyle ':completion:*:corrections' format '%B---- %d (errors %e)%b'
 zstyle ':completion:*:descriptions' format "%B---- %d%b"
-zstyle ':completion:*:messages' format '%B%U---- %d%u%b' 
+zstyle ':completion:*:messages' format '%B%U---- %d%u%b'
 zstyle ':completion:*:warnings' format "%B$fg[red]%}---- no match for: $fg[white]%d%b"
 zstyle ':completion:*' group-name ''
 
@@ -36,3 +36,13 @@ source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^ ' forward-word
 bindkey '^[[1;5C' forward-word #ctrl + →
 bindkey '^[[1;5D' backward-kill-word #crtl + ←
+
+# lazy load kubectl
+kubectl () {
+    command kubectl $*
+    if [[ -z $KUBECTL_COMPLETE ]]
+    then
+        source <(command kubectl completion zsh)
+        KUBECTL_COMPLETE=1
+    fi
+}
