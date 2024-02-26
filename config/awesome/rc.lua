@@ -50,7 +50,8 @@ beautiful.taglist_font = "FiraCode Nerd Font Medium 10"
 -- This is used later as the default terminal and editor to run.
 -- terminal = "roxterm"
 -- terminal = "terminator"
-terminal = "kitty"
+-- terminal = "kitty"
+terminal = "alacritty"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -266,7 +267,7 @@ awful.screen.connect_for_each_screen(function(s)
             id = 'text_role',
             widget = wibox.widget.textbox,
             align  = 'center',
-            forced_width = 20,
+            forced_width = 40,
           },
           widget = wibox.container.margin,
           layout = wibox.layout.fixed.horizontal,
@@ -280,7 +281,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 
     -- Create the bottombar
-    s.bottombox = awful.wibar({ position = "bottom", screen = s, height="24" })
+    s.bottombox = awful.wibar({ position = "bottom", screen = s, height="36" })
     -- Add widgets to the bottombar
     s.bottombox:setup {
         layout = wibox.layout.align.horizontal,
@@ -303,7 +304,7 @@ awful.screen.connect_for_each_screen(function(s)
         },
     }
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s; height=24 })
+    s.mywibox = awful.wibar({ position = "top", screen = s; height=36 })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -918,8 +919,8 @@ awful.spawn.with_shell('pkill gnome-screensaver ; gnome-screensaver &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
 awful.spawn.with_shell('autolock.sh &')
 --load_prog(2, {terminal, terminal, terminal})
-load_prog(8, "google-chrome --profile-directory='Profile 2'")
-load_prog(9, {"google-chrome --profile-directory='Profile 1'", "keepass2"})
+load_prog(8, "google-chrome --profile-directory='Profile 3'")
+load_prog(9, {"google-chrome --profile-directory='Default'", "keepass2"})
 
 -- 🗑️Garbage Collector Settings
 collectgarbage("setpause", 110)

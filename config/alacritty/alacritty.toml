@@ -1,0 +1,41 @@
+# Default colors
+[colors.primary]
+background = '#010414'
+foreground = '#EBEBEB'
+
+# Cursor colors
+[colors.cursor]
+text = '#2e3436'
+cursor = '#FFC620'
+
+# Normal colors
+[colors.normal]
+black   = '#2e3436'
+red     = '#b21818'
+green   = '#3cb371'
+yellow  = '#bf7f00'
+blue    = '#5c80ff'
+magenta = '#bf0fbf'
+cyan    = '#89d1ec'
+white   = '#b2b2b2'
+
+# Bright colors
+[colors.bright]
+black   = '#cdcdcd'
+red     = '#ff5454'
+green   = '#00ffaf'
+yellow  = '#ffff54'
+blue    = '#1f6cff'
+magenta = '#e75699'
+cyan    = '#1cfafe'
+white   = '#FEFEF8'
+
+[font.normal]
+family="FiraCode Nerd Font"
+#family="Cousine Nerd Font"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = -1
+

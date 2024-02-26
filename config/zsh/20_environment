@@ -19,18 +19,18 @@ unset  VERBOSE
 if [ $UID -eq 0 ]; then
     PATH=~root/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
     if test ! -n TERMINFO; then
-        export TERMINFO=/home/aurel/.local/kitty.app/lib/kitty/terminfo
+        export TERMINFO=$HOME/.local/kitty.app/lib/kitty/terminfo
     fi
 else
-    PATH="${HOME}/local/bin:/usr/lib/ccache:${HOME}/bin:${PATH}"
+    PATH="${HOME}/.local/bin:${HOME}/local/bin:/usr/lib/ccache:${HOME}/bin:${PATH}:${HOME}/dev/talarian/casa/tools/bin/"
     LD_LIBRARY_PATH="${HOME}/local/lib"
 fi
 
 export WORKON_HOME=$HOME/.virtualenvs
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=/home/aurel/.local/bin/virtualenv
-source /home/aurel/.local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_VIRTUALENV=$HOME/.local/bin/virtualenv
+#source $HOME/.local/bin/virtualenvwrapper.sh
 export M3_HOME=/opt/apache-maven-3.3.9
 export M3=$M3_HOME/bin
 export PATH=$M3:$PATH
@@ -43,5 +43,4 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-source "/etc/profile.d/rvm.sh"
 export GOPATH=$HOME/dev/go

@@ -1,3 +1,4 @@
 [roxterm options]
 colour_scheme=Orel
 prefer_dark_theme=1
+only_warn_running=1

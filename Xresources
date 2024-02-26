@@ -1,4 +1,4 @@
-!Xft.dpi: 192
+Xft.dpi: 192
 URxvt.cursorBlink:           True
 URxvt.cursorUnderline:    True
 URxvt.cursorColor:yellow
