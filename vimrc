@@ -12,7 +12,7 @@ set ai
 set hidden                      " allow to cycle and hide modified buffers
 set viminfo='1000,/1000,:1000,<1000,@1000,n~/.viminfo
 set history=1000
-set re=1
+set re=0
 let g:plug_window = 'above topleft new'
 call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
@@ -22,17 +22,24 @@ call plug#begin('~/.vim/plugged')
     Plug 'ryanoasis/vim-devicons'
     Plug 'Xuyuanp/nerdtree-git-plugin'
     Plug 'cespare/vim-toml'
-    Plug 'pangloss/vim-javascript'    " JavaScript support
-    Plug 'leafgarland/typescript-vim' " TypeScript syntax
-    Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
-    Plug 'jparise/vim-graphql'        " GraphQL syntax
-    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'typescript', 'TypeScript', 'lua', 'vim' ]}
+    "Plug 'pangloss/vim-javascript'    " JavaScript support
+    "Plug 'leafgarland/typescript-vim' " TypeScript syntax
+    "Plug 'HerringtonDarkholme/yats.vim'
+
+    "Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
+    "Plug 'jparise/vim-graphql'        " GraphQL syntax
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'typescript', 'typescriptreact', 'TypeScript', 'lua', 'vim' ]}
     Plug 'prashanthellina/follow-markdown-links'
     Plug 'ekalinin/Dockerfile.vim'
     Plug 'nvie/vim-flake8'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'vim-syntastic/syntastic'
     Plug 'https://gitlab.com/gi1242/vim-emoji-ab'
+    Plug 'lilydjwg/colorizer', { 'do': 'make install' }
+    Plug 'hashivim/vim-terraform'
+
+
+    "Plug 'https://github.com/peitalin/vim-jsx-typescript'
 
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
@@ -128,8 +135,10 @@ let c_space_errors=1
 let c_no_curly_errors=1
 
 au FileType typescript let g:coc_global_extensions = ['coc-tsserver']
+au FileType typescriptreact let g:coc_global_extensions = ['coc-tsserver']
 au FileType javascript let g:coc_global_extensions = ['coc-tsserver']
 au FileType typescript execute "CocEnable"
+au FileType typescriptreact execute "CocEnable"
 au FileType javascript execute "CocEnable"
 
 " IOP
@@ -143,13 +152,20 @@ noremap <F1>   :nohls<cr>
 map! <F1>  <C-o>:nohls<cr>
 map <F2> <C-]>
 map g<F2> g<C-]>
-au FileType typescript nmap <silent> gd <Plug>(coc-definition)
-au FileType typescript map <F2> <Plug>(coc-definition)
-au FileType typescript nmap <silent> gy <Plug>(coc-type-definition)
-au FileType typescript nmap <silent> gi <Plug>(coc-implementation)
-au FileType typescript nmap <silent> gr <Plug>(coc-references)
-au FileType typescript set tagfunc=CocTagFunc
-au FileType typescript nnoremap <C-t> <C-o>
+au FileType typescript,typescriptreact nmap <silent> gd <Plug>(coc-definition)
+au FileType typescript,typescriptreact map <F2> <Plug>(coc-definition)
+au FileType typescript,typescriptreact nmap <silent> gy <Plug>(coc-type-definition)
+au FileType typescript,typescriptreact nmap <silent> gi <Plug>(coc-implementation)
+au FileType typescript,typescriptreact nmap <silent> gr <Plug>(coc-references)
+au FileType typescript,typescriptreact set tagfunc=CocTagFunc
+au FileType typescript,typescriptreact set tagfunc=CocTagFunc
+au FileType typescript,typescriptreact nnoremap <C-t> <C-o>
+au FileType typescript,typescriptreact vmap = <Plug>(coc-format-selected)
+au FileType typescript,typescriptreact nmap = <Plug>(coc-format-selected)
+au FileType typescript,typescriptreact set redrawtime=10000
+
+"au BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
 
 map <C-Left> <C-w><Left>
 map! <C-Left> <Esc> <C-w><Left>

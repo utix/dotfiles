@@ -34,5 +34,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# NEAT Infra CLI
+export NEAT_INFRA_PATH=/home/aurel/dev/neat/infra
+source /home/aurel/dev/neat/infra/scripts/utils/infra-completion.zsh

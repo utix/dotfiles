@@ -244,7 +244,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "", "", "", "", "", "", "", "", "" }, s, awful.layout.layouts[1])
+    awful.tag({ "", "", "", "", "", "", "", "", "" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -267,7 +267,7 @@ awful.screen.connect_for_each_screen(function(s)
             id = 'text_role',
             widget = wibox.widget.textbox,
             align  = 'center',
-            forced_width = 40,
+            forced_width = 20,
           },
           widget = wibox.container.margin,
           layout = wibox.layout.fixed.horizontal,
@@ -281,7 +281,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 
     -- Create the bottombar
-    s.bottombox = awful.wibar({ position = "bottom", screen = s, height="36" })
+    s.bottombox = awful.wibar({ position = "bottom", screen = s, height="24" })
     -- Add widgets to the bottombar
     s.bottombox:setup {
         layout = wibox.layout.align.horizontal,
@@ -304,7 +304,7 @@ awful.screen.connect_for_each_screen(function(s)
         },
     }
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s; height=36 })
+    s.mywibox = awful.wibar({ position = "top", screen = s; height=24 })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -326,7 +326,7 @@ awful.screen.connect_for_each_screen(function(s)
                 enable_battery_warning=true,
                 margin_right=5
             }),
-            volume_widget({display_notification = true}),
+            volume_widget(),
             spacer,
             cmus_widget({space=3}),
            -- mic_widget,
@@ -903,7 +903,7 @@ function load_prog(tag, cmd)
     end
 end
 --awful.spawn('gnome-panel')
-awful.spawn('picom')
+awful.spawn.with_shell('picom&')
 awful.spawn('nm-applet')
 awful.spawn('slack')
 awful.spawn.with_shell('QT_AUTO_SCREEN_SCALE_FACTOR=1 copyq')

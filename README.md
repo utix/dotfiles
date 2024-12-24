@@ -33,3 +33,5 @@ Setting `autoScale=false` in ~/.config/zoomus.conf
 ```
 sudo sysctl kernel.dmesg_restrict=0
 ```
+
+umatrix plugins chrome

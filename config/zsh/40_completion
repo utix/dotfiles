@@ -46,3 +46,7 @@ kubectl () {
         KUBECTL_COMPLETE=1
     fi
 }
+eval "$(/home/linuxbrew/.linuxbrew/bin/scw autocomplete script shell=zsh)"
+source $NEAT_INFRA_PATH/scripts/utils/infra-completion.zsh
+source "$(brew --repository freshworks-developers/homebrew-tap)/path.bash.inc"
+

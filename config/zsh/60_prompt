@@ -75,6 +75,14 @@ function precmd {
     if type rvm > /dev/null; then
         psvar[4]=" $(rvm current)"
     fi
+
+    if type terraform > /dev/null; then
+        if test -d .terraform; then
+            local workspace="$(< .terraform/environment)"
+            psvar[4]="󱁢${workspace:gs/%/%%}"
+        fi
+    fi
+
     git_dir=$(git rev-parse --git-dir 2>/dev/null) || return
     extra=""
     if test -d "$git_dir/rebase-apply"; then
@@ -135,7 +143,6 @@ function precmd {
     psvar[5]="${branch#refs/heads/}"
     psvar[6]=$_STATUS
 }
-
 
 _my_prompt_setup() {
         setopt prompt_subst

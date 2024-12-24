@@ -11,7 +11,7 @@ cursor = '#FFC620'
 # Normal colors
 [colors.normal]
 black   = '#2e3436'
-red     = '#b21818'
+red     = '#fcafc7'
 green   = '#3cb371'
 yellow  = '#bf7f00'
 blue    = '#5c80ff'
@@ -34,6 +34,9 @@ white   = '#FEFEF8'
 family="FiraCode Nerd Font"
 #family="Cousine Nerd Font"
 style = "Regular"
+
+[font]
+size = 7
 
 [font.offset]
 x = 0

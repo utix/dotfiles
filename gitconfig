@@ -43,7 +43,8 @@
 	cursor		= default	yellow bold
 [user]
        name  = Aurelien LAJOIE
-       email = <aurelien.lajoie@kili-technology.com>
+       email = <aurelien@neat.eu>
+	signingkey = 16FB089E8296ED1E
 
 [color]
         branch = true
@@ -88,12 +89,11 @@
     pager = less -x1,5
 [commit]
     gpgsign = false
-[gpg]
-    program = gpg2
 [push]
-    default = upstream
+	default = current
 	autoSetupRemote = true
-
+[branch]
+    autosetuprebase = always
 [diff-so-fancy]
 	stripLeadingSymbols = false
 [url "https://github"]

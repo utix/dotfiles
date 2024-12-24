@@ -1,4 +1,4 @@
-Xft.dpi: 192
+#Xft.dpi: 192
 URxvt.cursorBlink:           True
 URxvt.cursorUnderline:    True
 URxvt.cursorColor:yellow
@@ -26,7 +26,7 @@ URxvt.keysym.Shift-F5: \033[15;2~
 xterm*BorderWidth: 0
 xterm*BorderColor: white
 /* XTerm */
-xterm*font: -*-*-medium-r-*-*-18-*-*-*-*-*-iso10646-*
+xterm*font: -*-*-medium-r-*-*-9-*-*-*-*-*-iso10646-*
 
 *saveLines: 10000
 *VT100*font:	-xos4-terminus-medium-r-normal-*-*-*-*-*-c-*-iso10646-1
