@@ -11,7 +11,7 @@ cursor = '#FFC620'
 # Normal colors
 [colors.normal]
 black   = '#2e3436'
-red     = '#fcafc7'
+red     = '#bd0013'
 green   = '#3cb371'
 yellow  = '#bf7f00'
 blue    = '#5c80ff'

@@ -25,6 +25,7 @@ local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
 local volume_widget   = require("awesome-wm-widgets.volume-widget.volume")
 -- local mic_widget   = require("awesome-wm-widgets.mic-widget.mic")
 -- local ssh_widget = require("sshagent")
+local notification_history = require("notification-history")
 -- Load Debian menu entries
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
@@ -393,7 +394,9 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"})
+              {description = "show main menu", group = "awesome"}),
+    awful.key({ modkey,           }, "h", function () notification_history.toggle() end,
+              {description = "show notification history", group = "awesome"})
     )
 
 globalkeys = gears.table.join( globalkeys,
@@ -919,8 +922,8 @@ awful.spawn.with_shell('pkill gnome-screensaver ; gnome-screensaver &')
 awful.spawn.with_shell('pkill flameshot; flameshot &')
 awful.spawn.with_shell('autolock.sh &')
 --load_prog(2, {terminal, terminal, terminal})
-load_prog(8, "google-chrome --profile-directory='Profile 3'")
-load_prog(9, {"google-chrome --profile-directory='Default'", "keepass2"})
+load_prog(8, "google-chrome --profile-directory='Default'")
+load_prog(9, "microsoft-edge")
 
 -- 🗑️Garbage Collector Settings
 collectgarbage("setpause", 110)
