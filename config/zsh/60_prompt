@@ -77,7 +77,7 @@ function precmd {
     fi
 
     if type terraform > /dev/null; then
-        if test -d .terraform; then
+        if [ -f .terraform/environment ]; then
             local workspace="$(< .terraform/environment)"
             psvar[4]="󱁢${workspace:gs/%/%%}"
         fi

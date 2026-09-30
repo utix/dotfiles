@@ -40,3 +40,5 @@ alias v=vim
 cvi () {
     vim -O ${${1%.[hc]}%.}.{h,c}
 }
+alias cursor='cursor --no-sandbox'
+

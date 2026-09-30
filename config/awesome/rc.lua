@@ -23,6 +23,7 @@ beautiful.tooltip_fg = beautiful.fg_normal
 beautiful.tooltip_bg = beautiful.bg_normal
 local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
 local volume_widget   = require("awesome-wm-widgets.volume-widget.volume")
+local three_column_layout = require("three-column-layout")
 -- local mic_widget   = require("awesome-wm-widgets.mic-widget.mic")
 -- local ssh_widget = require("sshagent")
 local notification_history = require("notification-history")
@@ -41,8 +42,8 @@ naughty.config.defaults['fg'] = "#ffffff"
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
---theme_path = "/home/aurel/.config/awesome/themes/theme.lua"
-theme_path = gears.filesystem.get_themes_dir() .. "default/theme.lua"
+theme_path = "/home/aurel/.config/awesome/themes/theme.lua"
+--theme_path = gears.filesystem.get_themes_dir() .. "default/theme.lua"
 beautiful.init(theme_path)
 beautiful.font = "Cousine Regular Nerd 10"
 beautiful.taglist_font = "FiraCode Nerd Font Medium 10"
@@ -66,6 +67,7 @@ alt    = "Mod1"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+    three_column_layout,
     awful.layout.suit.tile,
     --awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
@@ -268,7 +270,7 @@ awful.screen.connect_for_each_screen(function(s)
             id = 'text_role',
             widget = wibox.widget.textbox,
             align  = 'center',
-            forced_width = 20,
+            forced_width = 24,
           },
           widget = wibox.container.margin,
           layout = wibox.layout.fixed.horizontal,

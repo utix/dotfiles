@@ -101,7 +101,7 @@ setopt interactive_comments # allow comments in interactive shell
 setopt no_ksh_arrays        # don't emulate ksh arrays
 setopt no_ksh_autoload      # don't do some dark autoload on function call
 setopt no_ksh_glob          # ignore @ before ()
-setopt ksh_option_print     # modify setopt output
+#setopt ksh_option_print     # modify setopt output
 setopt no_ksh_typeset       # use zsh typeset
 setopt list_ambiguous       # unambiguous prefix completion is done silently
 setopt no_list_beep         # don't beep for completion

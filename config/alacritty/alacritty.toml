@@ -10,26 +10,24 @@ cursor = '#FFC620'
 
 # Normal colors
 [colors.normal]
-black   = '#2e3436'
+black   = '#a7a2a9'
 red     = '#bd0013'
 green   = '#3cb371'
 yellow  = '#bf7f00'
-blue    = '#5c80ff'
+blue    = '#3d44ba'
 magenta = '#bf0fbf'
 cyan    = '#89d1ec'
-white   = '#b2b2b2'
-
+white   = '#6e7476'
 # Bright colors
 [colors.bright]
-black   = '#cdcdcd'
+black   = '#FEFEF8'
 red     = '#ff5454'
 green   = '#00ffaf'
 yellow  = '#ffff54'
 blue    = '#1f6cff'
 magenta = '#e75699'
 cyan    = '#1cfafe'
-white   = '#FEFEF8'
-
+white   = '#aaaaaa'
 [font.normal]
 family="FiraCode Nerd Font"
 #family="Cousine Nerd Font"
@@ -42,3 +40,5 @@ size = 7
 x = 0
 y = -1
 
+[keyboard]
+bindings = [ { key = "Return", mods = "Shift", chars = "\n" } ]

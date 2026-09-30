@@ -19,7 +19,8 @@ local function store_notification(n)
         text = n.text or n.message or "",
         icon = n.icon,
         timestamp = os.time(),
-        app_name = n.app_name or "System"
+        app_name = n.app_name or "System",
+        urgency = n.urgency or "missing"  -- Store notification level
     }
 
     -- Insert at the beginning (most recent first)
@@ -67,17 +68,20 @@ local function create_popup()
             local time_str = os.date("%H:%M:%S", notif.timestamp)
             local date_str = os.date("%Y-%m-%d", notif.timestamp)
 
+            -- Determine background color based on urgency level
+            local bg_color = beautiful.bg_normal or "#222222"
+            if notif.urgency == "critical" then
+                bg_color = "#8B2252"  -- Dark pink for critical notifications
+            end
+
             -- Create notification entry
             local notif_widget = wibox.widget {
                 {
                     {
                         {
-                            markup = string.format("<b>%s</b>", gears.string.xml_escape(notif.title)),
-                            widget = wibox.widget.textbox,
-                        },
-                        {
-                            markup = string.format("<span size='small' foreground='#888888'>%s %s - %s</span>",
-                                date_str, time_str, gears.string.xml_escape(notif.app_name)),
+                            markup = string.format("<b>%s</b> <span size='small' foreground='#888888'>%s - %s</span>",
+                            gears.string.xml_escape(notif.title),
+                                time_str, gears.string.xml_escape(notif.app_name)),
                             widget = wibox.widget.textbox,
                         },
                         {
@@ -90,7 +94,7 @@ local function create_popup()
                     margins = 10,
                     widget = wibox.container.margin,
                 },
-                bg = beautiful.bg_normal or "#222222",
+                bg = bg_color,
                 fg = beautiful.fg_normal or "#ffffff",
                 shape = function(cr, width, height)
                     gears.shape.rounded_rect(cr, width, height, 5)

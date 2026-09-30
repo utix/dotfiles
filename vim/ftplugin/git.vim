@@ -27,57 +27,64 @@
 "                 <Leader>ghd  - view the diff in a hsplit
 "                 <Leader>gvd  - view the diff in a vsplit
 "==========================================================================
-
-if expand('%:t') != 'COMMIT_EDITMSG'
-    finish
+if expand('%:t') !=# 'COMMIT_EDITMSG'
+  finish
 endif
-if exists("b:did_ftplugin") | finish | endif
+
+if exists("b:did_ftplugin")
+  finish
+endif
 
 let b:did_ftplugin = 1
 
+" === Git commit window config ===
 setlocal tw=74
 setlocal nowarn nowb
+inoreabbrev <buffer> BB BREAKING CHANGE:
 
+" === Diff window helpers ===
 function! Git_diff_windows(vertsplit, auto, opts)
-    if a:vertsplit
-        rightbelow vnew
-    else
-        rightbelow new
-    endif
-    silent! setlocal ft=diff previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile
-    exe "normal :r!LANG=C git diff --stat -p --cached ".a:opts."\no\<esc>1GddO\<esc>"
-    setlocal nomodifiable
-    noremap <buffer> q :bw<cr>
-    if a:auto
-        redraw!
-        wincmd p
-        redraw!
-    endif
+  if a:vertsplit
+    rightbelow vnew
+  else
+    rightbelow new
+  endif
+  silent! setlocal ft=diff previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile
+  execute "normal :r!LANG=C git diff --stat -p --cached " . a:opts . "\no\<esc>1GddO\<esc>"
+  setlocal nomodifiable
+  noremap <buffer> q :bw<CR>
+  if a:auto
+    redraw!
+    wincmd p
+    redraw!
+  endif
 endfunction
 
-noremap <buffer> <Leader>gd :call Git_diff_windows(0, 0)<cr>
-noremap <buffer> <Leader>ghd :call Git_diff_windows(0, 0)<cr>
-noremap <buffer> <Leader>gvd :call Git_diff_windows(1, 0)<cr>
-
 if !exists("g:git_diff_opts")
-    let g:git_diff_opts = "-C -C"
+  let g:git_diff_opts = "-C -C"
 endif
+
 if exists("g:git_diff_spawn_mode")
-    if g:git_diff_spawn_mode == 1
-        call Git_diff_windows(0, 1, g:git_diff_opts)
-    elseif g:git_diff_spawn_mode == 2
-        call Git_diff_windows(1, 1, g:git_diff_opts)
-    endif
+  if g:git_diff_spawn_mode == 1
+    call Git_diff_windows(0, 1, g:git_diff_opts)
+  elseif g:git_diff_spawn_mode == 2
+    call Git_diff_windows(1, 1, g:git_diff_opts)
+  endif
 endif
 
-inoreabbrev <buffer> BB BREAKING CHANGE:
-if (strlen(getline(1)) == 0)
-    nnoremap    <buffer> i  i<C-r>=<sid>commit_type()<CR>
+nnoremap <buffer> <Leader>gd :call Git_diff_windows(0, 0, g:git_diff_opts)<CR>
+nnoremap <buffer> <Leader>ghd :call Git_diff_windows(0, 0, g:git_diff_opts)<CR>
+nnoremap <buffer> <Leader>gvd :call Git_diff_windows(1, 0, g:git_diff_opts)<CR>
+
+
+call setpos('.', [0, 1, 1, 0])
+
+if getline(1) == ''
+  call feedkeys("i\<C-r>=TriggerCommitType()\r", 'n')
 endif
 
-fun! s:commit_type()
+function! TriggerCommitType() abort
   call complete(1, ['build: ', 'chore: ', 'ci: ', 'docs: ', 'feat: ',
-              \ 'fix: ', 'perf: ', 'refactor: ', 'revert: ', 'style: ', 'test: '])
-  nunmap <buffer> i
+        \ 'fix: ', 'perf: ', 'refactor: ', 'revert: ', 'style: ', 'test: '])
   return ''
-endfun
+endfunction

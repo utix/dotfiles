@@ -23,7 +23,7 @@ _my_main () {
         source $zshrc_snipplet
         END=$(date +%s.%N)
         DIFF=$(echo "$END - $START" | bc)
-#        echo $zshrc_snipplet $DIFF
+        #echo $zshrc_snipplet $DIFF
     done
 }
 _my_main
@@ -34,6 +34,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# NEAT Infra CLI
-export NEAT_INFRA_PATH=/home/aurel/dev/neat/infra
-source /home/aurel/dev/neat/infra/scripts/utils/infra-completion.zsh
