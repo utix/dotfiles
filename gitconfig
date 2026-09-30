@@ -71,6 +71,11 @@
         conflictstyle = diff3
         stat = true
 	tool = kdiff3
+[rebase]
+        verbosity = 1
+        conflictstyle = diff3
+        stat = true
+	tool = kdiff3
 
 
 [grep]
@@ -98,3 +103,5 @@
 	stripLeadingSymbols = false
 [url "https://github"]
 	insteadOf = git://github
+[init]
+	defaultBranch = master
