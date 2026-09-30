@@ -2,7 +2,6 @@ set nocompatible                " Use Vim defaults instead of 100% vi compatibil
 set backspace=indent,eol,start  " more powerful backspacing
 set esckeys                     " allow usage of curs keys within insert mode
 set ttm=100
-
 syn on
 set encoding=utf-8
 set background=dark
@@ -24,26 +23,33 @@ call plug#begin('~/.vim/plugged')
     Plug 'cespare/vim-toml'
     "Plug 'pangloss/vim-javascript'    " JavaScript support
     "Plug 'leafgarland/typescript-vim' " TypeScript syntax
-    "Plug 'HerringtonDarkholme/yats.vim'
+    Plug 'HerringtonDarkholme/yats.vim'
 
     "Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
     "Plug 'jparise/vim-graphql'        " GraphQL syntax
-    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'javascript', 'typescript', 'typescriptreact', 'TypeScript', 'lua', 'vim' ]}
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'commit': '4bf93f0', 'for': ['dockerfile', 'json', 'javascript', 'typescript', 'typescriptreact', 'TypeScript', 'lua', 'vim' ]}
     Plug 'prashanthellina/follow-markdown-links'
-    Plug 'ekalinin/Dockerfile.vim'
+    Plug 'ekalinin/dockerfile.vim'
     Plug 'nvie/vim-flake8'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'vim-syntastic/syntastic'
     Plug 'https://gitlab.com/gi1242/vim-emoji-ab'
-    Plug 'lilydjwg/colorizer', { 'do': 'make install' }
+    Plug 'BourgeoisBear/clrzr'
     Plug 'hashivim/vim-terraform'
-
+    Plug 'pasky/claude.vim'
+    Plug 'puremourning/vimspector'
 
     "Plug 'https://github.com/peitalin/vim-jsx-typescript'
 
 "    Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     " Initialize plugin system
 call plug#end()
+let g:vimspector_base_dir='/home/aurel/.vim/plugged/vimspector'
+
+" Claude.vim configuration
+let g:claude_api_key = 'sk-'
+let g:claude_map_send_chat_message = '<Leader>s'
+
 set t_RV=
 let g:go_template_autocreate = 0
 set tags=tags;/,.tags;/,TAGS;/
@@ -120,6 +126,7 @@ au FileType java set et sts=4 sw=4 nowrap
 au FileType c set et sts=4 sw=4 tw=80 nowrap
 au FileType cpp set et sts=4 sw=4 tw=80 nowrap
 au FileType javascript set et sts=2 sw=2 nowrap
+au FileType typescript set et sts=2 sw=2 nowrap
 au FileType lua set et sts=2 sw=2 nowrap
 au FileType html,xhtml,xml setlocal sw=2 syntax=smarty nowrap
 au FileType css  set et sts=4 sw=4 nowrap
@@ -140,6 +147,7 @@ au FileType javascript let g:coc_global_extensions = ['coc-tsserver']
 au FileType typescript execute "CocEnable"
 au FileType typescriptreact execute "CocEnable"
 au FileType javascript execute "CocEnable"
+au FileType dockerfile execute "CocEnable"
 
 " IOP
 au BufRead,BufNewFile *.iop setf d
@@ -157,6 +165,8 @@ au FileType typescript,typescriptreact map <F2> <Plug>(coc-definition)
 au FileType typescript,typescriptreact nmap <silent> gy <Plug>(coc-type-definition)
 au FileType typescript,typescriptreact nmap <silent> gi <Plug>(coc-implementation)
 au FileType typescript,typescriptreact nmap <silent> gr <Plug>(coc-references)
+au FileType typescript,typescriptreact map <S-Right> <Plug>(coc-diagnostic-prev)
+au FileType typescript,typescriptreact map <S-Left> <Plug>(coc-diagnostic-next)
 au FileType typescript,typescriptreact set tagfunc=CocTagFunc
 au FileType typescript,typescriptreact set tagfunc=CocTagFunc
 au FileType typescript,typescriptreact nnoremap <C-t> <C-o>
@@ -169,6 +179,12 @@ au FileType typescript,typescriptreact set redrawtime=10000
 
 map <C-Left> <C-w><Left>
 map! <C-Left> <Esc> <C-w><Left>
+if &term == 'alacritty'
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif
 if &term == "rxvt-unicode"
     map Oc <C-w><Right>
     map! Oc <Esc><C-w><Right>
@@ -207,7 +223,17 @@ au FileType pom  set makeprg=PYTHONUNBUFFERED=1\ rainbow\ --config=mvn3\ --\ mvn
 autocmd FileType go no <F11> :GoRun<cr>
 map <F12> mcHmh:%s/ \+$//ge<cr>'hzt`c
 runtime macros/emoji-ab.vim
+nnoremap <Leader>dd :call vimspector#Launch()<CR>
+nnoremap <Leader>de :call vimspector#Reset()<CR>
+nnoremap <Leader>dc :call vimspector#Continue()<CR>
 
+nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+
+nmap <Leader>dk <Plug>VimspectorRestart
+nmap <Leader>dh <Plug>VimspectorStepOut
+nmap <Leader>dl <Plug>VimspectorStepInto
+nmap <Leader>dj <Plug>VimspectorStepOver
 " next compilation error
 map +        :cnext<cr>
 map <kPlus>  :cnext<CR>
@@ -237,47 +263,120 @@ function! DeleteBuffer()
    redraw
 endfunction
 map bc :call DeleteBuffer()<cr>
+
+function! s:CreateDebugBuffer() abort
+  let bufname = '__debug__'
+  if bufnr(bufname) == -1
+    botright new
+    file __debug__
+    setlocal buftype=nofile bufhidden=hide noswapfile nobuflisted modifiable
+    setlocal nospell nowrap nonumber norelativenumber
+  else
+    execute 'sbuffer' bufnr(bufname)
+  endif
+endfunction
+
+command! DebugOpen call s:CreateDebugBuffer()
+
+function! DebugLog(msg) abort
+    let l:msg = a:msg
+    call timer_start(0, { -> s:AppendDebugLine(l:msg) })
+endfunction
+
+function! s:AppendDebugLine(msg) abort
+  let bufname = '__debug__'
+  let bufnr = bufnr(bufname)
+  if bufnr != -1
+    call appendbufline(bufnr, '$', a:msg)
+    call setbufvar(bufnr, '&modified', 0)
+  endif
+endfunction
+
 function! TabAlign()
-    let col  = col('.')
-    let lnum = line('.')
+  let col  = col('.')
+  let lnum = line('.')
 
-    while lnum > 1
-        let lnum = lnum - 1
-        let ln = strpart(getline(lnum), col-1)
-        let ms = matchstr(ln, '[^ ]*  *[^ ]')
-        if ms != ""
-            break
-        endif
-    endwhile
-
-    if lnum == 1
-        return "\<Tab>"
-    else
-        let @z = substitute(strpart(ms, 0, strlen(ms)-1), '.', ' ', 'g')
-        if col > strlen(getline('.'))
-            return "\<C-O>\"zp"
-        else
-            return "\<C-O>\"zP"
-        endif
+  while lnum > 1
+    let lnum = lnum - 1
+    let ln = strpart(getline(lnum), col-1)
+    let ms = matchstr(ln, '[^ ]*  *[^ ]')
+    if ms != ""
+      break
     endif
+  endwhile
+
+  if lnum == 1
+    return "\<Tab>"
+  else
+    let @z = substitute(strpart(ms, 0, strlen(ms)-1), '.', ' ', 'g')
+    if col > strlen(getline('.'))
+      return "\<C-O>\"zp"
+    else
+      return "\<C-O>\"zP"
+    endif
+  endif
 
 endfunction
 
 function! CleverTab()
-    let c = strpart(getline('.'), col('.')-2, 1)
-    echom c
-    if c == '' || c == '	' || c == ' ' || c == '    ' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
-        if &expandtab == "noexpandtab"
-            return "\<Tab>"
-        else
-            return TabAlign()
-        endif
+  let c = strpart(getline('.'), col('.')-2, 1)
+  echom c
+  if c == '' || c == '	' || c == ' ' || c == '    ' || c == '\t' || c == '' || c == '{' || c == '}' || c == ';' || c == '"' || c == "'"
+    if &expandtab == "noexpandtab"
+      return "\<Tab>"
     else
-        return "\<C-P>"
+      return TabAlign()
     endif
+  else
+    return "\<C-P>"
+  endif
 endfunction
-inoremap <Tab> <C-R>=CleverTab()<CR>
+
 inoremap <S-Tab> <C-R>=TabAlign()<CR>
+inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+inoremap <silent><expr> <Tab> MySmartTab()
+function! MySmartTab() abort
+  let pum = exists('*coc#pum#visible') ? coc#pum#visible() : -1
+  let selected = exists('*coc#pum#selected') ? coc#pum#selected() : -2
+  let jumpable = exists('*coc#expandableOrJumpable') ? coc#expandableOrJumpable() : -1
+
+  call DebugLog("⮕ TAB pressed")
+  call DebugLog("pum#visible(): " . pum)
+  call DebugLog("pum#selected(): " . selected)
+  call DebugLog("expandableOrJumpable(): " . jumpable)
+
+  if exists('*coc#pum#visible') && coc#pum#visible()
+    return coc#pum#next(1)
+  elseif exists('*coc#pum#selected') && coc#pum#selected()
+    return "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>"
+  else
+    return CleverTab()
+  endif
+endfunction
+
+function! SmartCR() abort
+  let pum = exists('*coc#pum#visible') ? coc#pum#visible() : -1
+  let has_confirm = exists('*coc#pum#confirm')
+  let has_select_confirm = exists('*coc#_select_confirm')
+
+  call DebugLog("⮕ CR pressed")
+  call DebugLog("pum#visible(): " . pum)
+  call DebugLog("has_confirm: " . has_confirm)
+  call DebugLog("has_select_confirm: " . has_select_confirm)
+
+  if pum == 1 && has_confirm
+    return coc#pum#confirm()
+  endif
+
+  return "\<CR>"
+endfunction
+
+inoremap <silent><expr> <CR> SmartCR()
+
+"nnoremap <silent> <leader>a  :<C-u>call CocActionAsync('codeAction')<CR>
+nmap <leader>a  <Plug>(coc-codeaction)
+
 
 if has("autocmd")
     filetype plugin indent on
@@ -361,15 +460,68 @@ fun! <SID>Y(a)
     let l:z = ((l:b * l:cube) / 256)
     return 16 + ((l:x * l:cube + l:y) * l:cube) + l:z
 endfun
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
 
-fun! <SID>myhi(cls, m, fg, bg)
-    if has("gui_running")
-        exec "hi ".a:cls." gui=".a:m." guifg=".<SID>Y(a:fg)." guibg=".<SID>Y(a:bg)
-    else
-        exec "hi ".a:cls." cterm=".a:m." ctermfg=".<SID>Y(a:fg)." ctermbg=".<SID>Y(a:bg)
+if has('termguicolors')
+   set termguicolors
+endif
+" Define your terminal's color palette
+let s:palette = {
+    \ 'black':         '#2e3436',
+    \ 'red':           '#ff5454',
+    \ 'green':         '#00ffaf',
+    \ 'yellow':        '#ffff54',
+    \ 'blue':          '#1f6cff',
+    \ 'magenta':       '#e75699',
+    \ 'cyan':          '#1cfafe',
+    \ 'white':         '#FEFEF8',
+    \ 'darkgray':      '#cdcdcd',
+    \ 'lightred':      '#ff5454',
+    \ 'lightgreen':    '#00ffaf',
+    \ 'lightyellow':   '#ffff54',
+    \ 'lightblue':     '#1f6cff',
+    \ 'lightmagenta':  '#e75699',
+    \ 'lightcyan':     '#1cfafe',
+    \ 'lightgray':     '#FEFEF8',
+    \ 'darkred':       '#bd0013',
+    \ 'darkgreen':     '#3cb371',
+    \ 'darkyellow':    '#bf7f00',
+    \ 'darkblue':      '#5c80ff',
+    \ 'darkmagenta':   '#bf0fbf',
+    \ 'darkcyan':      '#89d1ec',
+    \ 'gray':          '#b2b2b2',
+    \ 'brown':         '#bf7f00',
+    \ 'NONE':          'NONE',
+\ }
+
+" Color lookup function
+fun! <SID>GetColor(color)
+    " If it's already a hex with #, return it
+    if a:color =~ '^#[0-9A-Fa-f]\{6\}$'
+        return a:color
     endif
+    " Look up in palette
+    if has_key(s:palette, a:color)
+        return s:palette[a:color]
+    endif
+    " Fallback to original color name
+    return a:color
 endfun
-
+fun! <SID>myhi(cls, m, fg, bg)
+    " Look up colors in palette
+    let l:fg = <SID>GetColor(a:fg)
+    let l:bg = <SID>GetColor(a:bg)
+    " Strip # for cterm (Y() function needs hex without #)
+    let l:fg_cterm = substitute(l:fg, '^#', '', '')
+    let l:bg_cterm = substitute(l:bg, '^#', '', '')
+    " Set cterm colors (for termguicolors OFF)
+    exec "hi ".a:cls." cterm=".a:m." ctermfg=".<SID>Y(l:fg_cterm)." ctermbg=".<SID>Y(l:bg_cterm)
+    " Set gui colors (for termguicolors ON) - keep # as-is
+    exec "hi ".a:cls." gui=".a:m." guifg=".l:fg." guibg=".l:bg
+endfun
 
 highlight TrailSpaces ctermbg=darkblue
 match TrailSpaces / \+$/
@@ -436,46 +588,56 @@ let g:go_highlight_fields = 1
 
 if has("gui_running") || &t_Co >= 88
     if has("gui_running")
-        exec <SID>myhi("Normal",       "NONE",       "dfdfdf",    "00000f")
-        exec <SID>myhi("MoreMsg",      "NONE",       "dfdfdf",    "00000f")
+        exec <SID>myhi("Normal",       "NONE",       "#dfdfdf",    "#00000f")
+        exec <SID>myhi("MoreMsg",      "NONE",       "#dfdfdf",    "#00000f")
     else
-        exec <SID>myhi("Normal",       "NONE",       "dfdfdf",    "NONE")
-        exec <SID>myhi("MoreMsg",      "NONE",       "dfdfdf",    "NONE")
+        exec <SID>myhi("Normal",       "NONE",       "#dfdfdf",    "NONE")
+        exec <SID>myhi("MoreMsg",      "NONE",       "#dfdfdf",    "NONE")
     endif
-    exec <SID>myhi("Comment",      "NONE",       "5F5F8A",    "NONE")
-    exec <SID>myhi("Folded",       "NONE",       "7C7CCB",    "NONE")
+    exec <SID>myhi("Comment",      "NONE",       "#5F5F8A",    "NONE")
+    exec <SID>myhi("Folded",       "NONE",       "#7C7CCB",    "NONE")
 
 
 
-    exec <SID>myhi("StatusLine",   "NONE",     "yellow",   "333333")
-    exec <SID>myhi("StatusLineNc", "NONE",     "dfdfdf",   "1c1c1c")
-    exec <SID>myhi("WildMenu",     "NONE",      "white",   "0f0f2f")
-    exec <SID>myhi("VertSplit",    "NONE",   "darkgray",   "0f0f2f")
+    exec <SID>myhi("StatusLine",   "NONE",     "yellow",   "#333333")
+    exec <SID>myhi("StatusLineNc", "NONE",    "#dfdfdf",   "#1c1c1c")
+    exec <SID>myhi("WildMenu",     "NONE",      "white",   "#0f0f2f")
+    exec <SID>myhi("VertSplit",    "NONE",   "darkgray",   "#0f0f2f")
 
-    exec <SID>myhi("MatchParen",   "NONE",      "white",   "0f0f2f")
-    exec <SID>myhi("Pmenu",        "NONE",     "dfdfdf",   "0f0f2f")
-    exec <SID>myhi("PmenuSel",     "NONE",      "white",   "3f3f7f")
-    exec <SID>myhi("PmenuSbar",    "NONE",      "white",   "0f0f2f")
-    exec <SID>myhi("PmenuThumb",   "NONE",     "3f3f7f",   "3f3f7f")
+    exec <SID>myhi("MatchParen",   "NONE",      "white",   "#0f0f2f")
+    exec <SID>myhi("Pmenu",        "NONE",    "#dfdfdf",   "#0f0f2f")
+    exec <SID>myhi("PmenuSel",     "NONE",      "white",   "#3f3f7f")
+    exec <SID>myhi("PmenuSbar",    "NONE",      "white",   "#0f0f2f")
+    exec <SID>myhi("PmenuThumb",   "NONE",    "#3f3f7f",   "#3f3f7f")
 
-    exec <SID>myhi("ColorColumn",  "bold",      "NONE",    "202020")
-    exec <SID>myhi("CursorColumn", "bold",      "NONE",    "202020")
+    exec <SID>myhi("ColorColumn",  "bold",      "NONE",    "#202020")
+    exec <SID>myhi("CursorColumn", "bold",      "NONE",    "#202020")
 
 
     " diff
     exec <SID>myhi("DiffAdd",      "NONE",       "green",     "NONE")
     exec <SID>myhi("DiffDelete",   "NONE",     "darkred",     "NONE")
-    exec <SID>myhi("DiffChange",   "NONE",        "NONE",   "333333")
+    exec <SID>myhi("DiffChange",   "NONE",        "NONE",  "#333333")
     exec <SID>myhi("DiffText",     "underline",   "NONE",     "NONE")
 
     " Python
-    exec <SID>myhi("pythonStatement",   "NONE", "1E90FF",    "NONE")
-    exec <SID>myhi("pythonConditional", "NONE", "1E90FF",    "NONE")
-    exec <SID>myhi("pythonFunction",    "bold", "3CB371",    "NONE")
-    exec <SID>myhi("pythonOperator",    "NONE", "3CB371",    "NONE")
-    exec <SID>myhi("Exception",         "bold", "FFFF33",    "NONE")
-    exec <SID>myhi("javaFuncDef",       "bold", "3CB371",    "NONE")
-    exec <SID>myhi("javaBraces",        "bold", "FFFF33",    "NONE")
+    exec <SID>myhi("pythonStatement",   "NONE", "#1E90FF",    "NONE")
+    exec <SID>myhi("pythonConditional", "NONE", "#1E90FF",    "NONE")
+    exec <SID>myhi("pythonFunction",    "bold", "#3CB371",    "NONE")
+    exec <SID>myhi("pythonOperator",    "NONE", "#3CB371",    "NONE")
+    " TypeScript
+    exec <SID>myhi("typescriptTry",                     "NONE",  "yellow", "NONE")
+    exec <SID>myhi("typescriptExceptions",              "bold",  "yellow", "NONE")
+    exec <SID>myhi("typescriptDecorator",             "italic", "#ffc0cb", "NONE")
+    exec <SID>myhi("typescriptReadonlyModifier",        "bold", "#50fa7b", "NONE")
+    exec <SID>myhi("typescriptAccessibilityModifier", "italic", "#bd93f9", "NONE")
+    exec <SID>myhi("typescriptObjectLabel",             "NONE", "#00d9ff", "NONE")
+    exec <SID>myhi("jsonKeyword",                       "NONE", "#00d9ff", "NONE")
+    exec <SID>myhi("CursorLine",                        "NONE", "NONE", "#3f3f7f")
+
+    exec <SID>myhi("Exception",         "bold", "#FFFF33",    "NONE")
+    exec <SID>myhi("javaFuncDef",       "bold", "#3CB371",    "NONE")
+    exec <SID>myhi("javaBraces",        "bold", "#FFFF33",    "NONE")
 else
     exec <SID>myhi("StatusLine",        "NONE",    "white",  "blue")
     exec <SID>myhi("StatusLineNc",      "NONE",    "black", "white")
@@ -483,7 +645,7 @@ else
     exec <SID>myhi("VertSplit",         "NONE", "darkgray",  "NONE")
 
     exec <SID>myhi("Comment",           "NONE",  "blue",     "NONE")
-    exec <SID>myhi("Folded",            "NONE",  "blue",     "NONE")
+    exec <SID>myhi("Folded",            "bold",  "blue",     "NONE")
 
     exec <SID>myhi("MatchParen",   "underline",  "NONE",     "NONE")
     exec <SID>myhi("Pmenu",             "NONE",  "gray",    "black")
